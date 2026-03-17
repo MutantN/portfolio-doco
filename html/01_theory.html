@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Dashboard Theory - Portfolio Optimization Documentation</title>
+    
+    <!-- MathJax for LaTeX rendering -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true,
+                tags: 'ams'
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            },
+            startup: {
+                ready: function() {
+                    MathJax.startup.defaultReady();
+                }
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <!-- Highlight.js for code syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
+    <script>hljs.highlightAll();</script>
+    
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --background-color: #ffffff;
+            --text-color: #333333;
+            --code-bg: #f8f8f8;
+            --border-color: #e1e4e8;
+            --nav-bg: #f6f8fa;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.7;
+            color: var(--text-color);
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: var(--background-color);
+        }
+        
+        /* Navigation */
+        nav {
+            background-color: var(--nav-bg);
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+        }
+        
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        nav a {
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+            font-size: 0.9em;
+        }
+        
+        nav a:hover {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        nav a.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        /* Headings */
+        h1 {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--secondary-color);
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+            margin-top: 40px;
+        }
+        
+        h3 {
+            color: var(--secondary-color);
+            margin-top: 30px;
+        }
+        
+        h4 {
+            color: var(--primary-color);
+            margin-top: 25px;
+        }
+        
+        /* Links */
+        a {
+            color: var(--secondary-color);
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Code */
+        code {
+            font-family: 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 0.9em;
+        }
+        
+        :not(pre) > code {
+            background-color: var(--code-bg);
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+        
+        pre {
+            background-color: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            overflow-x: auto;
+        }
+        
+        pre code {
+            background: none;
+            border: none;
+            padding: 0;
+        }
+        
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95em;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border: 1px solid var(--border-color);
+        }
+        
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+        }
+        
+        tr:nth-child(even) {
+            background-color: var(--nav-bg);
+        }
+        
+        tr:hover {
+            background-color: #e8f4f8;
+        }
+        
+        /* Blockquotes */
+        blockquote {
+            border-left: 4px solid var(--secondary-color);
+            margin: 20px 0;
+            padding: 10px 20px;
+            background-color: var(--nav-bg);
+            border-radius: 0 8px 8px 0;
+        }
+        
+        blockquote p {
+            margin: 0;
+        }
+        
+        /* Math display */
+        mjx-container[jax="CHTML"][display="true"] {
+            margin: 25px 0 !important;
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+        
+        /* Horizontal rules */
+        hr {
+            border: none;
+            border-top: 2px solid var(--border-color);
+            margin: 40px 0;
+        }
+        
+        /* Lists */
+        ul, ol {
+            padding-left: 25px;
+        }
+        
+        li {
+            margin: 8px 0;
+        }
+        
+        /* Footer */
+        footer {
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        /* Author info */
+        .author-info {
+            color: #666;
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            table {
+                font-size: 0.85em;
+            }
+            
+            th, td {
+                padding: 8px 10px;
+            }
+        }
+        
+        /* Print styles */
+        @media print {
+            nav, footer {
+                display: none;
+            }
+            
+            body {
+                max-width: none;
+                padding: 0;
+            }
+            
+            pre {
+                white-space: pre-wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="00_project_overview.html" >Project Overview</a></li>
+            <li><a href="01_theory.html" class="active">Theory</a></li>
+            <li><a href="02_quickstart.html" >Quickstart</a></li>
+            <li><a href="03_api_reference.html" >Api Reference</a></li>
+            <li><a href="04_monte_carlo.html" >Monte Carlo</a></li>
+        </ul>
+    </nav>
+    
+    <main>
+        <strong>Author:</strong> Amadea Schaum  
+<strong>Date:</strong> March 2026
+
+<h1>Portfolio Dashboard Theory</h1>
+
+<h2>Problem Framing</h2>
+
+<p>The production dashboard models a long-only portfolio over a selected stock universe. It estimates annualized returns and covariance from historical data, searches for candidate portfolios with Monte Carlo weight generation, and reports risk and performance measures for multiple portfolio objectives.</p>
+
+<hr>
+
+<h2>Notation</h2>
+
+<p>- $n$ = number of assets
+- $\mathbf{w} = (w_1, \dots, w_n)^\top$ = portfolio weights
+- $\boldsymbol{\mu}$ = annualized expected return vector
+- $\boldsymbol{\Sigma}$ = annualized covariance matrix
+- $R_f = 0.04$ = fixed annual risk-free rate in the current production app</p>
+
+<p>Constraints in production:</p>
+
+<p>- $w_i \ge 0$
+- $\sum_i w_i = 1$</p>
+
+<hr>
+
+<h2>Portfolio Statistics</h2>
+
+<h3>Expected Return</h3>
+
+$$
+R_p = \mathbf{w}^\top \boldsymbol{\mu}
+$$
+
+<h3>Volatility</h3>
+
+$$
+\sigma_p = \sqrt{\mathbf{w}^\top \boldsymbol{\Sigma} \mathbf{w}}
+$$
+
+<h3>Sharpe Ratio</h3>
+
+$$
+\text{Sharpe} = \frac{R_p - R_f}{\sigma_p}
+$$
+
+<p>The dashboard uses this exact fixed-rate Sharpe formulation to score simulated portfolios.</p>
+
+<hr>
+
+<h2>Portfolio Objectives</h2>
+
+<h3>Best Min Variance by Sharpe</h3>
+
+$$
+\min_{\mathbf{w}} \mathbf{w}^\top \boldsymbol{\Sigma} \mathbf{w}
+$$
+
+<h3>Best Max Sharpe</h3>
+
+$$
+\max_{\mathbf{w}} \frac{\mathbf{w}^\top \boldsymbol{\mu} - R_f}{\sqrt{\mathbf{w}^\top \boldsymbol{\Sigma} \mathbf{w}}}
+$$
+
+<h3>True Min Variance</h3>
+
+$$
+\max_{\mathbf{w}} \mathbf{w}^\top \boldsymbol{\mu}
+$$
+
+<hr>
+
+<h2>Monte Carlo Search</h2>
+
+<p>The production dashboard does <strong>not</strong> solve the weight problem with a deterministic quadratic optimizer. Instead, it samples many random long-only weights and retains the best portfolio for each objective.</p>
+
+<h3>Random weight generation</h3>
+
+<p>If random positive weights $u_i$ are drawn, production normalizes them as:</p>
+
+$$
+w_i = \frac{u_i}{\sum_{j=1}^{n} u_j}
+$$
+
+<p>This guarantees:</p>
+
+<p>- all weights are non-negative
+- total allocation sums to 1</p>
+
+<hr>
+
+<h2>Historical Return and Covariance Estimation</h2>
+
+<p>The app builds daily returns from Yahoo Finance price history and annualizes them using a 252-trading-day convention.</p>
+
+<h3>Annualized mean return</h3>
+
+$$
+\mu_i = 252 \cdot \frac{1}{T} \sum_{t=1}^{T} r_{it}
+$$
+
+<h3>Annualized covariance</h3>
+
+$$
+\sigma_{ij} = 252 \cdot \text{Cov}(r_i, r_j)
+$$
+
+<hr>
+
+<h2>VaR Methods In Production</h2>
+
+<h3>Historical VaR proxy</h3>
+
+<p>The app computes a worst realized rolling loss proxy from the selected lookback window.</p>
+
+<h3>Parametric VaR</h3>
+
+<p>The app also supports a normal-approximation annual VaR.</p>
+
+$$
+\text{VaR} = \mu_{\text{annual}} + z_p \sigma_{\text{annual}}
+$$
+
+<p>where the left-tail probability is interpreted as <code>1 / N years</code>.</p>
+
+<hr>
+
+<h2>Live Overlay Theory</h2>
+
+<p>The optimization engine remains historical/covariance driven, but the dashboard enriches the results with live market context:</p>
+
+<p>- Finnhub quote data for latest price
+- FMP analyst target consensus and rating data</p>
+
+<p>These live fields do not replace the covariance engine; they augment the dashboard’s explanatory layer.</p>
+
+<hr>
+
+<h2>Production Caveats</h2>
+
+<p>- no shorting
+- no leverage
+- no transaction costs
+- no taxes
+- no slippage
+- no liquidity modeling
+- no deterministic frontier solver</p>
+
+<p>The dashboard is an interactive analytical tool, not an execution engine.</p>
+    </main>
+    
+    <footer>
+        <p>Portfolio Optimization Documentation | Generated on 2026-03-17 15:03</p>
+        <p>Built with Python, MathJax, and Highlight.js</p>
+    </footer>
+</body>
+</html>

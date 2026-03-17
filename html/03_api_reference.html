@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Dashboard API Reference - Portfolio Optimization Documentation</title>
+    
+    <!-- MathJax for LaTeX rendering -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true,
+                tags: 'ams'
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            },
+            startup: {
+                ready: function() {
+                    MathJax.startup.defaultReady();
+                }
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <!-- Highlight.js for code syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
+    <script>hljs.highlightAll();</script>
+    
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --background-color: #ffffff;
+            --text-color: #333333;
+            --code-bg: #f8f8f8;
+            --border-color: #e1e4e8;
+            --nav-bg: #f6f8fa;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.7;
+            color: var(--text-color);
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: var(--background-color);
+        }
+        
+        /* Navigation */
+        nav {
+            background-color: var(--nav-bg);
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+        }
+        
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        nav a {
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+            font-size: 0.9em;
+        }
+        
+        nav a:hover {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        nav a.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        /* Headings */
+        h1 {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--secondary-color);
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+            margin-top: 40px;
+        }
+        
+        h3 {
+            color: var(--secondary-color);
+            margin-top: 30px;
+        }
+        
+        h4 {
+            color: var(--primary-color);
+            margin-top: 25px;
+        }
+        
+        /* Links */
+        a {
+            color: var(--secondary-color);
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Code */
+        code {
+            font-family: 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 0.9em;
+        }
+        
+        :not(pre) > code {
+            background-color: var(--code-bg);
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+        
+        pre {
+            background-color: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            overflow-x: auto;
+        }
+        
+        pre code {
+            background: none;
+            border: none;
+            padding: 0;
+        }
+        
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95em;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border: 1px solid var(--border-color);
+        }
+        
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+        }
+        
+        tr:nth-child(even) {
+            background-color: var(--nav-bg);
+        }
+        
+        tr:hover {
+            background-color: #e8f4f8;
+        }
+        
+        /* Blockquotes */
+        blockquote {
+            border-left: 4px solid var(--secondary-color);
+            margin: 20px 0;
+            padding: 10px 20px;
+            background-color: var(--nav-bg);
+            border-radius: 0 8px 8px 0;
+        }
+        
+        blockquote p {
+            margin: 0;
+        }
+        
+        /* Math display */
+        mjx-container[jax="CHTML"][display="true"] {
+            margin: 25px 0 !important;
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+        
+        /* Horizontal rules */
+        hr {
+            border: none;
+            border-top: 2px solid var(--border-color);
+            margin: 40px 0;
+        }
+        
+        /* Lists */
+        ul, ol {
+            padding-left: 25px;
+        }
+        
+        li {
+            margin: 8px 0;
+        }
+        
+        /* Footer */
+        footer {
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        /* Author info */
+        .author-info {
+            color: #666;
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            table {
+                font-size: 0.85em;
+            }
+            
+            th, td {
+                padding: 8px 10px;
+            }
+        }
+        
+        /* Print styles */
+        @media print {
+            nav, footer {
+                display: none;
+            }
+            
+            body {
+                max-width: none;
+                padding: 0;
+            }
+            
+            pre {
+                white-space: pre-wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="00_project_overview.html" >Project Overview</a></li>
+            <li><a href="01_theory.html" >Theory</a></li>
+            <li><a href="02_quickstart.html" >Quickstart</a></li>
+            <li><a href="03_api_reference.html" class="active">Api Reference</a></li>
+            <li><a href="04_monte_carlo.html" >Monte Carlo</a></li>
+        </ul>
+    </nav>
+    
+    <main>
+        <strong>Author:</strong> Amadea Schaum  
+<strong>Date:</strong> March 2026
+
+<h1>Portfolio Dashboard API Reference</h1>
+
+<p>This project is now a deployed React dashboard with lightweight serverless and dev-middleware endpoints.</p>
+
+<hr>
+
+<h2>Project-Level Interfaces</h2>
+
+<table>
+<tr><th>Interface</th><th>File</th><th>Purpose</th></tr>
+<tr><td>React app</td><td><code>/Users/A/portfolio-dashboard/src/App.jsx</code></td><td>Portfolio UI, simulation logic, live overlays</td></tr>
+<tr><td>Vite config</td><td><code>/Users/A/portfolio-dashboard/vite.config.js</code></td><td>Vite build config and dev/preview API middleware</td></tr>
+<tr><td>Vercel config</td><td><code>/Users/A/portfolio-dashboard/vercel.json</code></td><td>Production build/output/rewrite behavior</td></tr>
+<tr><td>Yahoo endpoint</td><td><code>/Users/A/portfolio-dashboard/api/yahoo-chart.js</code></td><td>Production serverless chart proxy</td></tr>
+</table>
+
+<hr>
+
+<h2>Environment Variables</h2>
+
+<table>
+<tr><th>Variable</th><th>Required</th><th>Purpose</th></tr>
+<tr><td><code>FINNHUB_API_KEY</code></td><td>Yes for live quotes</td><td>Fetches latest quote data</td></tr>
+<tr><td><code>FMP_API_KEY</code></td><td>Yes for analyst overlays</td><td>Fetches target price and rating data</td></tr>
+</table>
+
+<hr>
+
+<h2>Frontend Helper</h2>
+
+<h3><code>apiPath(path)</code></h3>
+
+<p>Location:</p>
+
+<p>- <code>src/App.jsx</code></p>
+
+<p>Purpose:</p>
+
+<p>- builds API URLs from <code>import.meta.env.BASE_URL</code>
+- allows the app to work both:
+  - on its standalone Vercel domain
+  - under <code>/portfolio-dashboard/</code></p>
+
+<hr>
+
+<h2>Endpoint: <code>/api/yahoo-chart</code></h2>
+
+<h3>Production file</h3>
+
+<p>- <code>api/yahoo-chart.js</code></p>
+
+<h3>Dev/preview implementation</h3>
+
+<p>- <code>vite.config.js</code></p>
+
+<h3>Method</h3>
+
+<p>- <code>GET</code></p>
+
+<h3>Query parameters</h3>
+
+<table>
+<tr><th>Name</th><th>Required</th><th>Description</th></tr>
+<tr><td><code>ticker</code></td><td>Yes</td><td>Symbol, normalized for Yahoo Finance</td></tr>
+<tr><td><code>period1</code></td><td>Yes</td><td>Unix start timestamp</td></tr>
+<tr><td><code>period2</code></td><td>Yes</td><td>Unix end timestamp</td></tr>
+</table>
+
+<h3>Purpose</h3>
+
+<p>- fetches historical chart data from Yahoo Finance
+- returns raw JSON used to build return series and risk inputs</p>
+
+<hr>
+
+<h2>Endpoint: <code>/api/quotes</code></h2>
+
+<h3>Dev/preview implementation</h3>
+
+<p>- <code>vite.config.js</code></p>
+
+<h3>Method</h3>
+
+<p>- <code>GET</code></p>
+
+<h3>Query parameters</h3>
+
+<table>
+<tr><th>Name</th><th>Required</th><th>Description</th></tr>
+<tr><td><code>symbols</code></td><td>Yes</td><td>Comma-separated ticker list</td></tr>
+</table>
+
+<h3>Purpose</h3>
+
+<p>- aggregates live quote and analyst context
+- returns data merged from:
+  - Finnhub
+  - Financial Modeling Prep</p>
+
+<h3>Response shape</h3>
+
+<pre><code class="language-json">{
+  "source": "Finnhub+FMP",
+  "quotes": {
+    "AAPL": {
+      "price": 250.12,
+      "prev": 255.76,
+      "name": "AAPL",
+      "exchange": "US",
+      "time": 1773432000,
+      "targetPrice": 316.36,
+      "targetDate": "",
+      "analystCount": 109,
+      "rating": "Buy",
+      "ratingDate": ""
+    }
+  },
+  "missing": []
+}
+</code></pre>
+
+<hr>
+
+<h2>Core Portfolio Functions</h2>
+
+<p>The current app logic lives in <code>src/App.jsx</code>.</p>
+
+<h3><code>historicalVaRProxy(dailyReturns, weights)</code></h3>
+
+<p>- computes a worst realized rolling loss proxy from historical returns</p>
+
+<h3><code>parametricVaR(dailyReturns, weights, oneInYears=2)</code></h3>
+
+<p>- computes a normal-approximation VaR from annualized return and volatility</p>
+
+<h3><code>optimize(mu, cv, seed, mode)</code></h3>
+
+<p>- Monte Carlo search over random long-only weights
+- returns the best portfolio under the requested objective</p>
+
+<h3><code>runSim(...)</code></h3>
+
+<p>- runs a simulation instance over selected stocks
+- produces portfolio statistics for the reported portfolio variants</p>
+
+<hr>
+
+<h2>Deployment Behavior</h2>
+
+<h3>Vite</h3>
+
+<p>- <code>base: "./"</code> ensures relative assets in production</p>
+
+<h3>Vercel</h3>
+
+<p>- framework: <code>vite</code>
+- build command: <code>npm run build</code>
+- output directory: <code>dist</code>
+- non-file routes rewrite to <code>index.html</code></p>
+
+<hr>
+
+<h2>Operational Notes</h2>
+
+<p>- The dashboard is Git-connected to <code>MutantN/portfolio-dashboard</code>
+- Production deployment is triggered from Git pushes or manual <code>vercel --prod</code>
+- Routed custom-domain access is provided through <code>as-hobby-home</code></p>
+    </main>
+    
+    <footer>
+        <p>Portfolio Optimization Documentation | Generated on 2026-03-17 15:03</p>
+        <p>Built with Python, MathJax, and Highlight.js</p>
+    </footer>
+</body>
+</html>
