@@ -242,7 +242,7 @@
       <nav class="nav">
         <h2>Documents</h2>
         <ul>
-          <li><a class="" href="00_project_overview.md">Portfolio Dashboard Project Overview</a></li><li><a class="" href="01_theory.md">Portfolio Dashboard Theory</a></li><li><a class="active" href="02_quickstart.md">Portfolio Dashboard Quick Start</a></li><li><a class="" href="03_api_reference.md">Portfolio Dashboard API Reference</a></li><li><a class="" href="04_monte_carlo.md">Monte Carlo Engine In The Portfolio Dashboard</a></li><li><a class="" href="README.md">Portfolio Dashboard Docs</a></li>
+          <li><a class="" href="00_project_overview.html">Portfolio Dashboard Project Overview</a></li><li><a class="" href="01_theory.html">Portfolio Dashboard Theory</a></li><li><a class="active" href="02_quickstart.html">Portfolio Dashboard Quick Start</a></li><li><a class="" href="03_api_reference.html">Portfolio Dashboard API Reference</a></li><li><a class="" href="04_monte_carlo.html">Monte Carlo Engine In The Portfolio Dashboard</a></li><li><a class="" href="README.html">Portfolio Dashboard Docs</a></li>
         </ul>
       </nav>
       <article class="content">
@@ -281,14 +281,24 @@
 <hr>
 <h2 id="before-you-start" tabindex="-1"><a class="header-anchor" href="#before-you-start">Before You Start</a></h2>
 <ul>
-<li>Node.js</li>
-<li>npm</li>
-<li>Vercel CLI if you want to deploy manually</li>
+<li>
+<p>Node.js</p>
+</li>
+<li>
+<p>npm</p>
+</li>
+<li>
+<p>Vercel CLI if you want to deploy manually</p>
+</li>
 </ul>
 <p>If you want live quotes and analyst overlays locally, you will also need:</p>
 <ul>
-<li><code>FINNHUB_API_KEY</code></li>
-<li><code>FMP_API_KEY</code></li>
+<li>
+<p><code>FINNHUB_API_KEY</code></p>
+</li>
+<li>
+<p><code>FMP_API_KEY</code></p>
+</li>
 </ul>
 <hr>
 <h2 id="install-dependencies" tabindex="-1"><a class="header-anchor" href="#install-dependencies">Install Dependencies</a></h2>
@@ -302,8 +312,12 @@ npm run dev
 </code></pre>
 <p>This starts the app and the local API middleware defined in <code>vite.config.js</code>, including:</p>
 <ul>
-<li><code>/api/yahoo-chart</code></li>
-<li><code>/api/quotes</code></li>
+<li>
+<p><code>/api/yahoo-chart</code></p>
+</li>
+<li>
+<p><code>/api/quotes</code></p>
+</li>
 </ul>
 <hr>
 <h2 id="build-the-production-version" tabindex="-1"><a class="header-anchor" href="#build-the-production-version">Build The Production Version</a></h2>
@@ -312,11 +326,18 @@ npm run build
 </code></pre>
 <p>You should get:</p>
 <ul>
-<li>static app in <code>dist/</code></li>
-<li>relative asset paths suitable for:
+<li>
+<p>static app in <code>dist/</code></p>
+</li>
+<li>
+<p>relative asset paths suitable for:</p>
 <ul>
-<li>standalone Vercel hosting</li>
-<li>routed deployment at <code>/portfolio-dashboard/</code></li>
+<li>
+<p>standalone Vercel hosting</p>
+</li>
+<li>
+<p>routed deployment at <code>/portfolio-dashboard/</code></p>
+</li>
 </ul>
 </li>
 </ul>
@@ -343,8 +364,12 @@ FMP_API_KEY
 </code></pre>
 <p>These can live in:</p>
 <ul>
-<li>local <code>.env.local</code></li>
-<li>Vercel project environment variables</li>
+<li>
+<p>local <code>.env.local</code></p>
+</li>
+<li>
+<p>Vercel project environment variables</p>
+</li>
 </ul>
 <hr>
 <h2 id="files-you-will-most-likely-touch" tabindex="-1"><a class="header-anchor" href="#files-you-will-most-likely-touch">Files You Will Most Likely Touch</a></h2>
@@ -379,9 +404,15 @@ FMP_API_KEY
 <h3 id="update-the-docs" tabindex="-1"><a class="header-anchor" href="#update-the-docs">Update the docs</a></h3>
 <p>Edit:</p>
 <ul>
-<li><code>README.md</code></li>
-<li><code>portfolio-doco/README.md</code></li>
-<li>this documentation set</li>
+<li>
+<p><code>README.md</code></p>
+</li>
+<li>
+<p><code>portfolio-doco/README.md</code></p>
+</li>
+<li>
+<p>this documentation set</p>
+</li>
 </ul>
 <h3 id="check-path-safe-asset-behavior" tabindex="-1"><a class="header-anchor" href="#check-path-safe-asset-behavior">Check path-safe asset behavior</a></h3>
 <p>Confirm <code>vite.config.js</code> still uses:</p>

@@ -242,7 +242,7 @@
       <nav class="nav">
         <h2>Documents</h2>
         <ul>
-          <li><a class="" href="00_project_overview.md">Portfolio Dashboard Project Overview</a></li><li><a class="" href="01_theory.md">Portfolio Dashboard Theory</a></li><li><a class="" href="02_quickstart.md">Portfolio Dashboard Quick Start</a></li><li><a class="active" href="03_api_reference.md">Portfolio Dashboard API Reference</a></li><li><a class="" href="04_monte_carlo.md">Monte Carlo Engine In The Portfolio Dashboard</a></li><li><a class="" href="README.md">Portfolio Dashboard Docs</a></li>
+          <li><a class="" href="00_project_overview.html">Portfolio Dashboard Project Overview</a></li><li><a class="" href="01_theory.html">Portfolio Dashboard Theory</a></li><li><a class="" href="02_quickstart.html">Portfolio Dashboard Quick Start</a></li><li><a class="active" href="03_api_reference.html">Portfolio Dashboard API Reference</a></li><li><a class="" href="04_monte_carlo.html">Monte Carlo Engine In The Portfolio Dashboard</a></li><li><a class="" href="README.html">Portfolio Dashboard Docs</a></li>
         </ul>
       </nav>
       <article class="content">
@@ -315,11 +315,18 @@
 </ul>
 <p>Purpose:</p>
 <ul>
-<li>builds API URLs from <code>import.meta.env.BASE_URL</code></li>
-<li>keeps requests working both:
+<li>
+<p>builds API URLs from <code>import.meta.env.BASE_URL</code></p>
+</li>
+<li>
+<p>keeps requests working both:</p>
 <ul>
-<li>on the standalone Vercel deployment</li>
-<li>under <code>/portfolio-dashboard/</code> on the main domain</li>
+<li>
+<p>on the standalone Vercel deployment</p>
+</li>
+<li>
+<p>under <code>/portfolio-dashboard/</code> on the main domain</p>
+</li>
 </ul>
 </li>
 </ul>
@@ -366,8 +373,12 @@
 </table>
 <h3 id="purpose" tabindex="-1"><a class="header-anchor" href="#purpose">Purpose</a></h3>
 <ul>
-<li>fetches historical chart data from Yahoo Finance</li>
-<li>returns the raw data used to build return series and portfolio risk inputs</li>
+<li>
+<p>fetches historical chart data from Yahoo Finance</p>
+</li>
+<li>
+<p>returns the raw data used to build return series and portfolio risk inputs</p>
+</li>
 </ul>
 <hr>
 <h2 id="endpoint%3A-%2Fapi%2Fquotes" tabindex="-1"><a class="header-anchor" href="#endpoint%3A-%2Fapi%2Fquotes">Endpoint: <code>/api/quotes</code></a></h2>
@@ -398,11 +409,18 @@
 </table>
 <h3 id="purpose-1" tabindex="-1"><a class="header-anchor" href="#purpose-1">Purpose</a></h3>
 <ul>
-<li>aggregates live quote and analyst context</li>
-<li>returns merged data from:
+<li>
+<p>aggregates live quote and analyst context</p>
+</li>
+<li>
+<p>returns merged data from:</p>
 <ul>
-<li>Finnhub</li>
-<li>Financial Modeling Prep</li>
+<li>
+<p>Finnhub</p>
+</li>
+<li>
+<p>Financial Modeling Prep</p>
+</li>
 </ul>
 </li>
 </ul>
@@ -439,13 +457,21 @@
 </ul>
 <h3 id="optimize(mu%2C-cv%2C-seed%2C-mode)" tabindex="-1"><a class="header-anchor" href="#optimize(mu%2C-cv%2C-seed%2C-mode)"><code>optimize(mu, cv, seed, mode)</code></a></h3>
 <ul>
-<li>runs a Monte Carlo-style search over random long-only weights</li>
-<li>returns the best portfolio under the requested objective</li>
+<li>
+<p>runs a Monte Carlo-style search over random long-only weights</p>
+</li>
+<li>
+<p>returns the best portfolio under the requested objective</p>
+</li>
 </ul>
 <h3 id="runsim(...)" tabindex="-1"><a class="header-anchor" href="#runsim(...)"><code>runSim(...)</code></a></h3>
 <ul>
-<li>runs one simulation pass over the selected stocks</li>
-<li>produces the portfolio statistics used in the dashboard views</li>
+<li>
+<p>runs one simulation pass over the selected stocks</p>
+</li>
+<li>
+<p>produces the portfolio statistics used in the dashboard views</p>
+</li>
 </ul>
 <hr>
 <h2 id="deployment-behavior" tabindex="-1"><a class="header-anchor" href="#deployment-behavior">Deployment Behavior</a></h2>
@@ -455,17 +481,31 @@
 </ul>
 <h3 id="vercel" tabindex="-1"><a class="header-anchor" href="#vercel">Vercel</a></h3>
 <ul>
-<li>framework: <code>vite</code></li>
-<li>build command: <code>npm run build</code></li>
-<li>output directory: <code>dist</code></li>
-<li>non-file routes rewrite to <code>index.html</code></li>
+<li>
+<p>framework: <code>vite</code></p>
+</li>
+<li>
+<p>build command: <code>npm run build</code></p>
+</li>
+<li>
+<p>output directory: <code>dist</code></p>
+</li>
+<li>
+<p>non-file routes rewrite to <code>index.html</code></p>
+</li>
 </ul>
 <hr>
 <h2 id="operational-notes" tabindex="-1"><a class="header-anchor" href="#operational-notes">Operational Notes</a></h2>
 <ul>
-<li>The dashboard is Git-connected to <code>MutantN/portfolio-dashboard</code></li>
-<li>Production deployment is triggered from Git pushes or manual <code>vercel --prod</code></li>
-<li>Routed custom-domain access is provided through <code>as-hobby-home</code></li>
+<li>
+<p>The dashboard is Git-connected to <code>MutantN/portfolio-dashboard</code></p>
+</li>
+<li>
+<p>Production deployment is triggered from Git pushes or manual <code>vercel --prod</code></p>
+</li>
+<li>
+<p>Routed custom-domain access is provided through <code>as-hobby-home</code></p>
+</li>
 </ul>
 
         <div class="footer">Source project: <code>/Users/A/portfolio-doco</code></div>
