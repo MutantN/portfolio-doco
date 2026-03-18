@@ -1,7 +1,7 @@
 **Author:** Amadea Schaum  
 **Date:** March 2026
 
-# Portfolio Dashboard Theory
+# Theoretical Background
 
 ## What This Page Explains
 
@@ -92,30 +92,59 @@ The dashboard focuses on three portfolio views.
 
 ### 1. Best Min Variance by Sharpe
 
-In deterministic mode, this is defined cleanly as:
+In deterministic mode, this is defined as:
 
-- maximize Sharpe
-- subject to portfolio volatility staying below a user-set annualized threshold
+$$
+\max_{\mathbf{w}} \; \frac{\mathbf{w}^\top \boldsymbol{\mu} - R_f}{\sqrt{\mathbf{w}^\top \boldsymbol{\Sigma} \mathbf{w}}}
+$$
+
+subject to:
+
+$$
+\sqrt{\mathbf{w}^\top \boldsymbol{\Sigma} \mathbf{w}} \le \sigma_{\max}
+$$
+
+and the usual portfolio constraints:
+
+$$
+w_i \ge 0, \qquad \sum_{i=1}^{n} w_i = 1
+$$
 
 In plain terms, the user chooses a volatility ceiling and the dashboard finds the best risk-adjusted portfolio that stays inside it.
 
 ### 2. Best Max Sharpe
 
-This is the clearest best risk-adjusted return portfolio in the dashboard.
+This is the portfolio that gives the strongest Sharpe ratio under the selected engine:
 
-It is the portfolio that gives the strongest Sharpe ratio under the selected engine.
+$$
+\max_{\mathbf{w}} \; \frac{\mathbf{w}^\top \boldsymbol{\mu} - R_f}{\sqrt{\mathbf{w}^\top \boldsymbol{\Sigma} \mathbf{w}}}
+$$
+
+subject to:
+
+$$
+w_i \ge 0, \qquad \sum_{i=1}^{n} w_i = 1
+$$
 
 ### 3. True Min Variance
 
-This is the absolute lowest-volatility portfolio under the long-only, fully invested constraints.
+This is the absolute lowest-volatility portfolio under the long-only, fully invested constraints:
+
+$$
+\min_{\mathbf{w}} \; \mathbf{w}^\top \boldsymbol{\Sigma} \mathbf{w}
+$$
+
+subject to:
+
+$$
+w_i \ge 0, \qquad \sum_{i=1}^{n} w_i = 1
+$$
 
 It does not try to improve return once volatility has been minimized.
 
-That makes it the most conservative portfolio view shown in the app.
-
 ---
 
-## How The Optimization Method Works
+## Optimization Methodology
 
 The dashboard now supports two optimization engines.
 
@@ -137,13 +166,33 @@ In the current implementation, each Monte Carlo optimization pass evaluates 2,00
 If random positive values $u_i$ are drawn, the app converts them to valid weights like this:
 
 $$
-w_i = rac{u_i}{\sum_{j=1}^{n} u_j}
+w_i = \frac{u_i}{\sum_{j=1}^{n} u_j}
 $$
 
 That guarantees:
 
 - every weight stays non-negative
 - all weights sum to 1
+
+#### Monte Carlo objective evaluation
+
+For each sampled portfolio, the dashboard evaluates:
+
+$$
+R_p = \mathbf{w}^\top \boldsymbol{\mu}
+$$
+
+$$
+\sigma_p = \sqrt{\mathbf{w}^\top \boldsymbol{\Sigma} \mathbf{w}}
+$$
+
+$$
+\text{Sharpe}(\mathbf{w}) = \frac{R_p - R_f}{\sigma_p}
+$$
+
+The engine then keeps the candidate that best matches the target objective.
+
+This approach is simple and flexible, but it is a search heuristic rather than an exact optimizer.
 
 ### Deterministic engine
 
@@ -155,12 +204,60 @@ It is used for:
 - Best Max Sharpe
 - Best Min Variance by Sharpe with a volatility cap
 
-Conceptually, the deterministic engine works by:
+#### Feasible set
 
-1. starting from a valid weight vector
-2. moving weights in the direction that improves the objective
-3. projecting the weights back onto the feasible simplex
-4. repeating until the solution stabilizes
+The deterministic engine works on the simplex:
+
+$$
+\Delta = \left\{ \mathbf{w} \in \mathbb{R}^n : w_i \ge 0,\; \sum_{i=1}^{n} w_i = 1 \right\}
+$$
+
+#### Projected optimization idea
+
+Starting from a feasible weight vector $\mathbf{w}^{(k)}$, the method takes an improving step and projects it back onto the simplex:
+
+$$
+\tilde{\mathbf{w}}^{(k+1)} = \mathbf{w}^{(k)} + \alpha_k \nabla f\left(\mathbf{w}^{(k)}\right)
+$$
+
+$$
+\mathbf{w}^{(k+1)} = \Pi_{\Delta}\left(\tilde{\mathbf{w}}^{(k+1)}\right)
+$$
+
+Where:
+
+- $f(\mathbf{w})$ is the objective being optimized
+- $\alpha_k$ is the step size
+- $\Pi_{\Delta}$ is projection back onto the feasible simplex
+
+Conceptually, this means:
+
+1. start from a valid portfolio
+2. move in the direction that improves the target objective
+3. force the updated weights back into the valid long-only, fully invested region
+4. repeat until the solution stabilizes
+
+#### Deterministic objectives in the dashboard
+
+For True Min Variance, the objective is:
+
+$$
+\min_{\mathbf{w} \in \Delta} \; \mathbf{w}^\top \boldsymbol{\Sigma} \mathbf{w}
+$$
+
+For Best Max Sharpe, the objective is:
+
+$$
+\max_{\mathbf{w} \in \Delta} \; \frac{\mathbf{w}^\top \boldsymbol{\mu} - R_f}{\sqrt{\mathbf{w}^\top \boldsymbol{\Sigma} \mathbf{w}}}
+$$
+
+For Best Min Variance by Sharpe, the objective is the same Sharpe maximization, but with an added volatility cap:
+
+$$
+\max_{\mathbf{w} \in \Delta} \; \frac{\mathbf{w}^\top \boldsymbol{\mu} - R_f}{\sqrt{\mathbf{w}^\top \boldsymbol{\Sigma} \mathbf{w}}}
+\quad \text{subject to} \quad
+\sqrt{\mathbf{w}^\top \boldsymbol{\Sigma} \mathbf{w}} \le \sigma_{\max}
+$$
 
 This gives a faster and more stable comparison path than pure random sampling, while preserving the same portfolio constraints.
 
