@@ -15,7 +15,7 @@ The production version is a dashboard that brings together:
 
 3. analyst targets and ratings from Financial Modeling Prep
 
-4. Monte Carlo portfolio search
+4. dual optimization engines: Monte Carlo and deterministic
 
 5. on-screen portfolio comparison and risk views
 
@@ -45,15 +45,19 @@ The current production dashboard supports:
 
 A. Monte Carlo portfolio simulation across a chosen stock set
 
-B. Comparison of **Best Min Variance by Sharpe**, **Best Max Sharpe**, and **True Min Variance** portfolios
+B. Deterministic optimization across the same stock set
 
-C. Historical and parametric VaR analysis
+C. Comparison of **Best Min Variance by Sharpe**, **Best Max Sharpe**, and **True Min Variance** portfolios
 
-D. Live quote overlays
+D. User-set annualized volatility threshold for **Best Min Variance by Sharpe** in deterministic mode
 
-E. Analyst target price and rating overlays
+E. Historical and parametric VaR analysis
 
-F. Production-safe deployment on both:
+F. Live quote overlays
+
+G. Analyst target price and rating overlays
+
+H. Production-safe deployment on both:
 
 - its own Vercel project domain
 
@@ -96,11 +100,15 @@ F. Production-safe deployment on both:
 
 - Used for:
 
-  - mean return estimation
+  - historical mean return estimation
+
+  - modeled return fallback and blending inputs
 
   - covariance estimation
 
-  - Monte Carlo simulation inputs
+  - Monte Carlo engine inputs
+
+  - deterministic engine inputs
 
   - historical VaR proxy
 
@@ -127,6 +135,16 @@ F. Production-safe deployment on both:
 - Fixed risk-free rate: `4%`
 
 - Weight constraints: long-only and fully invested
+
+- Optimization engines:
+
+  - Monte Carlo random-weight search
+
+  - deterministic projected optimization
+
+- Deterministic Best Min Variance by Sharpe rule:
+
+  - maximize Sharpe subject to a user-set annualized volatility cap
 
 - VaR methods:
 

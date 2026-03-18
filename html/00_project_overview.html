@@ -263,7 +263,7 @@
 <p>analyst targets and ratings from Financial Modeling Prep</p>
 </li>
 <li>
-<p>Monte Carlo portfolio search</p>
+<p>dual optimization engines: Monte Carlo and deterministic</p>
 </li>
 <li>
 <p>on-screen portfolio comparison and risk views</p>
@@ -314,11 +314,13 @@
 <h2 id="what-you-can-do-in-it" tabindex="-1"><a class="header-anchor" href="#what-you-can-do-in-it">What You Can Do In It</a></h2>
 <p>The current production dashboard supports:</p>
 <p>A. Monte Carlo portfolio simulation across a chosen stock set</p>
-<p>B. Comparison of <strong>Best Min Variance by Sharpe</strong>, <strong>Best Max Sharpe</strong>, and <strong>True Min Variance</strong> portfolios</p>
-<p>C. Historical and parametric VaR analysis</p>
-<p>D. Live quote overlays</p>
-<p>E. Analyst target price and rating overlays</p>
-<p>F. Production-safe deployment on both:</p>
+<p>B. Deterministic optimization across the same stock set</p>
+<p>C. Comparison of <strong>Best Min Variance by Sharpe</strong>, <strong>Best Max Sharpe</strong>, and <strong>True Min Variance</strong> portfolios</p>
+<p>D. User-set annualized volatility threshold for <strong>Best Min Variance by Sharpe</strong> in deterministic mode</p>
+<p>E. Historical and parametric VaR analysis</p>
+<p>F. Live quote overlays</p>
+<p>G. Analyst target price and rating overlays</p>
+<p>H. Production-safe deployment on both:</p>
 <ul>
 <li>
 <p>its own Vercel project domain</p>
@@ -362,13 +364,19 @@
 <p>Used for:</p>
 <ul>
 <li>
-<p>mean return estimation</p>
+<p>historical mean return estimation</p>
+</li>
+<li>
+<p>modeled return fallback and blending inputs</p>
 </li>
 <li>
 <p>covariance estimation</p>
 </li>
 <li>
-<p>Monte Carlo simulation inputs</p>
+<p>Monte Carlo engine inputs</p>
+</li>
+<li>
+<p>deterministic engine inputs</p>
 </li>
 <li>
 <p>historical VaR proxy</p>
@@ -414,6 +422,23 @@
 </li>
 <li>
 <p>Weight constraints: long-only and fully invested</p>
+</li>
+<li>
+<p>Optimization engines:</p>
+<ul>
+<li>
+<p>Monte Carlo random-weight search</p>
+</li>
+<li>
+<p>deterministic projected optimization</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Deterministic Best Min Variance by Sharpe rule:</p>
+<ul>
+<li>maximize Sharpe subject to a user-set annualized volatility cap</li>
+</ul>
 </li>
 <li>
 <p>VaR methods:</p>

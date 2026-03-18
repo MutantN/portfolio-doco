@@ -3,23 +3,27 @@
 
 # Monte Carlo Engine In The Portfolio Dashboard
 
+This page describes the Monte Carlo engine specifically, not the full dashboard optimization stack.
+
 ## Overview
 
-The current production dashboard still uses Monte Carlo logic, but now it lives inside the app rather than in a separate Python workflow.
+The current production dashboard supports both a Monte Carlo engine and a deterministic engine.
+
+This page covers the Monte Carlo path only.
 
 In practice, that engine is used to:
 
 - sample candidate portfolio weights
 
-- compare portfolio objectives
+- compare portfolio objectives under random search
 
-- surface interactive results in the UI
+- provide a direct comparison path against the deterministic engine in the UI
 
 ---
 
 ## What The Dashboard Compares
 
-The dashboard focuses on three portfolio views:
+Within the Monte Carlo path, the dashboard focuses on three portfolio views:
 
 - Best Min Variance by Sharpe
 
@@ -69,7 +73,7 @@ Each variant is evaluated using:
 
 - best candidate retained
 
-This is a practical search approach that keeps the dashboard responsive enough for interactive use.
+This is a practical search approach that keeps the dashboard responsive enough for interactive use, even though it is less efficient than the deterministic optimizer for standard portfolio objectives.
 
 ---
 
@@ -116,7 +120,7 @@ The dashboard lets you switch between these methods depending on whether you wan
 ```text
 Yahoo Finance history
     -> daily returns
-    -> annualized means / covariance
+    -> selected expected return vector + historical covariance
     -> Monte Carlo optimization
     -> VaR analysis
 
@@ -154,6 +158,8 @@ The current production model is:
 - server-backed market-data endpoints
 
 - in-app interactive simulation and comparison
+
+- side-by-side engine comparison between Monte Carlo and deterministic optimization
 
 ---
 

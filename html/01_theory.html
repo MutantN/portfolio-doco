@@ -258,8 +258,8 @@
 <p>It answers that by:</p>
 <ul>
 <li>estimating return and risk from market data</li>
-<li>generating many candidate portfolios</li>
-<li>scoring those portfolios against the chosen objective</li>
+<li>solving the portfolio under either a Monte Carlo engine or a deterministic engine</li>
+<li>scoring portfolios against the chosen objective</li>
 <li>surfacing the strongest result for each portfolio view</li>
 </ul>
 <hr>
@@ -317,42 +317,58 @@ $$</p>
 <h2 id="the-three-portfolio-views-in-the-dashboard" tabindex="-1"><a class="header-anchor" href="#the-three-portfolio-views-in-the-dashboard">The Three Portfolio Views In The Dashboard</a></h2>
 <p>The dashboard focuses on three portfolio views.</p>
 <h3 id="1.-best-min-variance-by-sharpe" tabindex="-1"><a class="header-anchor" href="#1.-best-min-variance-by-sharpe">1. Best Min Variance by Sharpe</a></h3>
-<p>This is meant to represent the strongest risk-adjusted portfolio within the low-volatility part of the search results.</p>
-<p>You can think of it as:</p>
+<p>In deterministic mode, this is defined cleanly as:</p>
 <ul>
-<li>stay in the safer part of the opportunity set</li>
-<li>then choose the candidate with the better Sharpe profile inside that group</li>
+<li>maximize Sharpe</li>
+<li>subject to portfolio volatility staying below a user-set annualized threshold</li>
 </ul>
+<p>In plain terms, the user chooses a volatility ceiling and the dashboard finds the best risk-adjusted portfolio that stays inside it.</p>
 <h3 id="2.-best-max-sharpe" tabindex="-1"><a class="header-anchor" href="#2.-best-max-sharpe">2. Best Max Sharpe</a></h3>
 <p>This is the clearest best risk-adjusted return portfolio in the dashboard.</p>
-<p>It is the portfolio that gives the strongest Sharpe ratio among the sampled candidates.</p>
+<p>It is the portfolio that gives the strongest Sharpe ratio under the selected engine.</p>
 <h3 id="3.-true-min-variance" tabindex="-1"><a class="header-anchor" href="#3.-true-min-variance">3. True Min Variance</a></h3>
-<p>This is the absolute lowest-volatility portfolio found by the search.</p>
+<p>This is the absolute lowest-volatility portfolio under the long-only, fully invested constraints.</p>
 <p>It does not try to improve return once volatility has been minimized.</p>
 <p>That makes it the most conservative portfolio view shown in the app.</p>
 <hr>
 <h2 id="how-the-optimization-method-works" tabindex="-1"><a class="header-anchor" href="#how-the-optimization-method-works">How The Optimization Method Works</a></h2>
-<p>The dashboard uses a Monte Carlo search heuristic.</p>
-<p>It does <strong>not</strong> run a classical deterministic optimizer in the live UI path.</p>
-<p>Instead, it does this:</p>
+<p>The dashboard now supports two optimization engines.</p>
+<h3 id="monte-carlo-engine" tabindex="-1"><a class="header-anchor" href="#monte-carlo-engine">Monte Carlo engine</a></h3>
+<p>The Monte Carlo path generates many random candidate portfolios and scores them.</p>
+<p>It does this:</p>
 <ol>
 <li>generate many random candidate weight sets</li>
 <li>normalize each weight set so total allocation is 100%</li>
 <li>calculate return, volatility, and Sharpe for each candidate</li>
 <li>keep the strongest candidates for the relevant portfolio objective</li>
 </ol>
-<p>In the current implementation, each optimization pass evaluates 2,000 candidate weight sets.</p>
-<h3 id="random-weight-generation" tabindex="-1"><a class="header-anchor" href="#random-weight-generation">Random weight generation</a></h3>
+<p>In the current implementation, each Monte Carlo optimization pass evaluates 2,000 candidate weight sets.</p>
+<h4 id="random-weight-generation" tabindex="-1"><a class="header-anchor" href="#random-weight-generation">Random weight generation</a></h4>
 <p>If random positive values $u_i$ are drawn, the app converts them to valid weights like this:</p>
 <p>$$
-w_i = \frac{u_i}{\sum_{j=1}^{n} u_j}
+w_i = rac{u_i}{\sum_{j=1}^{n} u_j}
 $$</p>
 <p>That guarantees:</p>
 <ul>
 <li>every weight stays non-negative</li>
 <li>all weights sum to 1</li>
 </ul>
-<p>This approach is practical for an interactive dashboard because it is simple, fast, and easy to rerun.</p>
+<h3 id="deterministic-engine" tabindex="-1"><a class="header-anchor" href="#deterministic-engine">Deterministic engine</a></h3>
+<p>The deterministic path replaces random search with projected optimization under the same long-only, fully invested constraints.</p>
+<p>It is used for:</p>
+<ul>
+<li>True Min Variance</li>
+<li>Best Max Sharpe</li>
+<li>Best Min Variance by Sharpe with a volatility cap</li>
+</ul>
+<p>Conceptually, the deterministic engine works by:</p>
+<ol>
+<li>starting from a valid weight vector</li>
+<li>moving weights in the direction that improves the objective</li>
+<li>projecting the weights back onto the feasible simplex</li>
+<li>repeating until the solution stabilizes</li>
+</ol>
+<p>This gives a faster and more stable comparison path than pure random sampling, while preserving the same portfolio constraints.</p>
 <hr>
 <h2 id="how-historical-returns-are-built" tabindex="-1"><a class="header-anchor" href="#how-historical-returns-are-built">How Historical Returns Are Built</a></h2>
 <p>The historical mode starts from Yahoo Finance price history.</p>
