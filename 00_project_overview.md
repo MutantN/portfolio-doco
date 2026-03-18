@@ -174,4 +174,4 @@ H. Production-safe deployment on both:
 | `01_theory.md` | Optimization and VaR math used by the dashboard |
 | `02_quickstart.md` | Local development and production verification |
 | `03_api_reference.md` | Current endpoints, env vars, and key files |
-| `04_monte_carlo.md` | Monte Carlo engine behavior in the dashboard |
+| `04_monte_carlo.md` | Optimization approaches and methodology used in the dashboard |
