@@ -1,453 +1,405 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio Dashboard Quick Start - Portfolio Optimization Documentation</title>
-    
-    <!-- MathJax for LaTeX rendering -->
-    <script>
-        MathJax = {
-            tex: {
-                inlineMath: [['$', '$'], ['\\(', '\\)']],
-                displayMath: [['$$', '$$'], ['\\[', '\\]']],
-                processEscapes: true,
-                processEnvironments: true,
-                tags: 'ams'
-            },
-            options: {
-                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-            },
-            startup: {
-                ready: function() {
-                    MathJax.startup.defaultReady();
-                }
-            }
-        };
-    </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    
-    <!-- Highlight.js for code syntax highlighting -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
-    <script>hljs.highlightAll();</script>
-    
-    <style>
-        :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #3498db;
-            --accent-color: #e74c3c;
-            --background-color: #ffffff;
-            --text-color: #333333;
-            --code-bg: #f8f8f8;
-            --border-color: #e1e4e8;
-            --nav-bg: #f6f8fa;
-        }
-        
-        * {
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            line-height: 1.7;
-            color: var(--text-color);
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: var(--background-color);
-        }
-        
-        /* Navigation */
-        nav {
-            background-color: var(--nav-bg);
-            padding: 15px 20px;
-            border-radius: 8px;
-            margin-bottom: 30px;
-            border: 1px solid var(--border-color);
-        }
-        
-        nav ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        
-        nav a {
-            color: var(--secondary-color);
-            text-decoration: none;
-            font-weight: 500;
-            padding: 8px 12px;
-            border-radius: 4px;
-            transition: background-color 0.2s;
-            font-size: 0.9em;
-        }
-        
-        nav a:hover {
-            background-color: var(--secondary-color);
-            color: white;
-        }
-        
-        nav a.active {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        
-        /* Headings */
-        h1 {
-            color: var(--primary-color);
-            border-bottom: 3px solid var(--secondary-color);
-            padding-bottom: 10px;
-            margin-top: 0;
-        }
-        
-        h2 {
-            color: var(--primary-color);
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 8px;
-            margin-top: 40px;
-        }
-        
-        h3 {
-            color: var(--secondary-color);
-            margin-top: 30px;
-        }
-        
-        h4 {
-            color: var(--primary-color);
-            margin-top: 25px;
-        }
-        
-        /* Links */
-        a {
-            color: var(--secondary-color);
-            text-decoration: none;
-        }
-        
-        a:hover {
-            text-decoration: underline;
-        }
-        
-        /* Code */
-        code {
-            font-family: 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace;
-            font-size: 0.9em;
-        }
-        
-        :not(pre) > code {
-            background-color: var(--code-bg);
-            padding: 2px 6px;
-            border-radius: 4px;
-            border: 1px solid var(--border-color);
-        }
-        
-        pre {
-            background-color: var(--code-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 16px;
-            overflow-x: auto;
-        }
-        
-        pre code {
-            background: none;
-            border: none;
-            padding: 0;
-        }
-        
-        /* Tables */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            font-size: 0.95em;
-        }
-        
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border: 1px solid var(--border-color);
-        }
-        
-        th {
-            background-color: var(--primary-color);
-            color: white;
-            font-weight: 600;
-        }
-        
-        tr:nth-child(even) {
-            background-color: var(--nav-bg);
-        }
-        
-        tr:hover {
-            background-color: #e8f4f8;
-        }
-        
-        /* Blockquotes */
-        blockquote {
-            border-left: 4px solid var(--secondary-color);
-            margin: 20px 0;
-            padding: 10px 20px;
-            background-color: var(--nav-bg);
-            border-radius: 0 8px 8px 0;
-        }
-        
-        blockquote p {
-            margin: 0;
-        }
-        
-        /* Math display */
-        mjx-container[jax="CHTML"][display="true"] {
-            margin: 25px 0 !important;
-            overflow-x: auto;
-            overflow-y: hidden;
-        }
-        
-        /* Horizontal rules */
-        hr {
-            border: none;
-            border-top: 2px solid var(--border-color);
-            margin: 40px 0;
-        }
-        
-        /* Lists */
-        ul, ol {
-            padding-left: 25px;
-        }
-        
-        li {
-            margin: 8px 0;
-        }
-        
-        /* Footer */
-        footer {
-            margin-top: 60px;
-            padding-top: 20px;
-            border-top: 1px solid var(--border-color);
-            text-align: center;
-            color: #666;
-            font-size: 0.9em;
-        }
-        
-        /* Author info */
-        .author-info {
-            color: #666;
-            font-style: italic;
-            margin-bottom: 20px;
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            body {
-                padding: 15px;
-            }
-            
-            nav ul {
-                flex-direction: column;
-                gap: 8px;
-            }
-            
-            table {
-                font-size: 0.85em;
-            }
-            
-            th, td {
-                padding: 8px 10px;
-            }
-        }
-        
-        /* Print styles */
-        @media print {
-            nav, footer {
-                display: none;
-            }
-            
-            body {
-                max-width: none;
-                padding: 0;
-            }
-            
-            pre {
-                white-space: pre-wrap;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio Dashboard Quick Start - Portfolio Dashboard Docs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css">
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  <style>
+  :root {
+    --bg: #f7fafc;
+    --card: #ffffff;
+    --ink: #0f172a;
+    --muted: #475569;
+    --line: #dbe4ee;
+    --accent: #0f766e;
+    --accent-2: #1d4ed8;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+    color: var(--ink);
+    background:
+      radial-gradient(1000px 500px at 10% -10%, #dbeafe 0%, transparent 55%),
+      radial-gradient(900px 500px at 100% 0%, #dcfce7 0%, transparent 55%),
+      var(--bg);
+  }
+
+  .shell {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 32px 20px 56px;
+  }
+
+  .topbar {
+    margin-bottom: 20px;
+    padding: 16px 18px;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+  }
+
+  .topbar h1 {
+    margin: 0 0 8px;
+    font-size: 20px;
+  }
+
+  .topbar p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr);
+    gap: 20px;
+    align-items: start;
+  }
+
+  .nav {
+    position: sticky;
+    top: 20px;
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    background: var(--card);
+  }
+
+  .nav h2 {
+    margin: 0 0 12px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+
+  .nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 8px;
+  }
+
+  .nav a {
+    display: block;
+    text-decoration: none;
+    color: var(--ink);
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid transparent;
+  }
+
+  .nav a:hover,
+  .nav a.active {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+  }
+
+  .content {
+    padding: 28px 32px;
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    background: var(--card);
+    box-shadow: 0 18px 50px rgba(15, 23, 42, 0.06);
+  }
+
+  .content h1 {
+    margin-top: 0;
+    font-size: clamp(30px, 4vw, 44px);
+    line-height: 1.08;
+  }
+
+  .content h2 {
+    margin-top: 32px;
+    padding-top: 8px;
+    border-top: 1px solid var(--line);
+    font-size: 24px;
+  }
+
+  .content h3 {
+    margin-top: 24px;
+    color: var(--accent-2);
+    font-size: 18px;
+  }
+
+  .content p,
+  .content li {
+    line-height: 1.75;
+  }
+
+  .content ul,
+  .content ol {
+    padding-left: 24px;
+    margin: 14px 0;
+  }
+
+  .content li + li {
+    margin-top: 8px;
+  }
+
+  .content ul ul,
+  .content ol ol,
+  .content ul ol,
+  .content ol ul {
+    margin-top: 8px;
+  }
+
+  .content code {
+    font-family: "JetBrains Mono", "SFMono-Regular", monospace;
+    font-size: 0.92em;
+  }
+
+  .content :not(pre) > code {
+    padding: 2px 6px;
+    border-radius: 8px;
+    background: #f8fafc;
+    border: 1px solid var(--line);
+  }
+
+  .content pre {
+    overflow-x: auto;
+    padding: 16px;
+    border-radius: 16px;
+    background: #0f172a;
+  }
+
+  .content pre code {
+    color: #e2e8f0;
+  }
+
+  .content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 18px 0;
+  }
+
+  .content th,
+  .content td {
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .content th {
+    background: #f8fafc;
+  }
+
+  .content blockquote {
+    margin: 20px 0;
+    padding: 12px 16px;
+    border-left: 4px solid var(--accent);
+    background: #f8fafc;
+    border-radius: 0 12px 12px 0;
+  }
+
+  .footer {
+    margin-top: 20px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  @media (max-width: 900px) {
+    .layout {
+      grid-template-columns: 1fr;
+    }
+
+    .nav {
+      position: static;
+    }
+
+    .content {
+      padding: 22px 18px;
+    }
+  }
+</style>
 </head>
 <body>
-    <nav>
+  <main class="shell">
+    <section class="topbar">
+      <h1>Portfolio Dashboard Docs</h1>
+      <p>Friendly documentation for the production Portfolio Dashboard and its supporting data flows.</p>
+    </section>
+    <section class="layout">
+      <nav class="nav">
+        <h2>Documents</h2>
         <ul>
-            <li><a href="00_project_overview.html" >Project Overview</a></li>
-            <li><a href="01_theory.html" >Theory</a></li>
-            <li><a href="02_quickstart.html" class="active">Quickstart</a></li>
-            <li><a href="03_api_reference.html" >Api Reference</a></li>
-            <li><a href="04_monte_carlo.html" >Monte Carlo</a></li>
+          <li><a class="" href="00_project_overview.md">Portfolio Dashboard Project Overview</a></li><li><a class="" href="01_theory.md">Portfolio Dashboard Theory</a></li><li><a class="active" href="02_quickstart.md">Portfolio Dashboard Quick Start</a></li><li><a class="" href="03_api_reference.md">Portfolio Dashboard API Reference</a></li><li><a class="" href="04_monte_carlo.md">Monte Carlo Engine In The Portfolio Dashboard</a></li><li><a class="" href="README.md">Portfolio Dashboard Docs</a></li>
         </ul>
-    </nav>
-    
-    <main>
-        <strong>Author:</strong> Amadea Schaum  
-<strong>Date:</strong> March 2026
-
-<h1>Portfolio Dashboard Quick Start</h1>
-
-<p>This quick start reflects the <strong>current production React dashboard</strong> in <code>/Users/A/portfolio-dashboard</code>.</p>
-
+      </nav>
+      <article class="content">
+        <p><strong>Author:</strong> Amadea Schaum<br>
+<strong>Date:</strong> March 2026</p>
+<h1 id="portfolio-dashboard-quick-start" tabindex="-1"><a class="header-anchor" href="#portfolio-dashboard-quick-start">Portfolio Dashboard Quick Start</a></h1>
+<p>This quick start is for the current production Portfolio Dashboard app in <code>/Users/A/portfolio-dashboard</code>.</p>
 <hr>
-
-<h2>Project Mapping</h2>
-
+<h2 id="project-mapping" tabindex="-1"><a class="header-anchor" href="#project-mapping">Project Mapping</a></h2>
 <table>
-<tr><th>Item</th><th>Value</th></tr>
-<tr><td>Local folder</td><td><code>/Users/A/portfolio-dashboard</code></td></tr>
-<tr><td>GitHub repo</td><td><code>https://github.com/MutantN/portfolio-dashboard</code></td></tr>
-<tr><td>Vercel project</td><td><code>portfolio-dashboard</code></td></tr>
-<tr><td>Domain route</td><td><code>https://as-hobby-labs.com/portfolio-dashboard/</code></td></tr>
+<thead>
+<tr>
+<th>Item</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Local folder</td>
+<td><code>/Users/A/portfolio-dashboard</code></td>
+</tr>
+<tr>
+<td>GitHub repo</td>
+<td><code>https://github.com/MutantN/portfolio-dashboard</code></td>
+</tr>
+<tr>
+<td>Vercel project</td>
+<td><code>portfolio-dashboard</code></td>
+</tr>
+<tr>
+<td>Domain route</td>
+<td><code>https://as-hobby-labs.com/portfolio-dashboard/</code></td>
+</tr>
+</tbody>
 </table>
-
 <hr>
-
-<h2>Prerequisites</h2>
-
-<p>- Node.js
-- npm
-- Vercel CLI if you want to deploy manually</p>
-
-<p>Optional for local live-data behavior:</p>
-
-<p>- <code>FINNHUB_API_KEY</code>
-- <code>FMP_API_KEY</code></p>
-
+<h2 id="before-you-start" tabindex="-1"><a class="header-anchor" href="#before-you-start">Before You Start</a></h2>
+<ul>
+<li>Node.js</li>
+<li>npm</li>
+<li>Vercel CLI if you want to deploy manually</li>
+</ul>
+<p>If you want live quotes and analyst overlays locally, you will also need:</p>
+<ul>
+<li><code>FINNHUB_API_KEY</code></li>
+<li><code>FMP_API_KEY</code></li>
+</ul>
 <hr>
-
-<h2>Install</h2>
-
-<pre><code class="language-bash">cd /Users/A/portfolio-dashboard
+<h2 id="install-dependencies" tabindex="-1"><a class="header-anchor" href="#install-dependencies">Install Dependencies</a></h2>
+<pre><code class="hljs language-bash"><span class="hljs-built_in">cd</span> /Users/A/portfolio-dashboard
 npm install
 </code></pre>
-
 <hr>
-
-<h2>Run Locally</h2>
-
-<pre><code class="language-bash">cd /Users/A/portfolio-dashboard
+<h2 id="run-it-locally" tabindex="-1"><a class="header-anchor" href="#run-it-locally">Run It Locally</a></h2>
+<pre><code class="hljs language-bash"><span class="hljs-built_in">cd</span> /Users/A/portfolio-dashboard
 npm run dev
 </code></pre>
-
-<p>This starts the Vite app and the dev middleware in <code>vite.config.js</code>, including:</p>
-
-<p>- <code>/api/yahoo-chart</code>
-- <code>/api/quotes</code></p>
-
+<p>This starts the app and the local API middleware defined in <code>vite.config.js</code>, including:</p>
+<ul>
+<li><code>/api/yahoo-chart</code></li>
+<li><code>/api/quotes</code></li>
+</ul>
 <hr>
-
-<h2>Build For Production</h2>
-
-<pre><code class="language-bash">cd /Users/A/portfolio-dashboard
+<h2 id="build-the-production-version" tabindex="-1"><a class="header-anchor" href="#build-the-production-version">Build The Production Version</a></h2>
+<pre><code class="hljs language-bash"><span class="hljs-built_in">cd</span> /Users/A/portfolio-dashboard
 npm run build
 </code></pre>
-
-<p>Expected output:</p>
-
-<p>- static app in <code>dist/</code>
-- relative asset paths suitable for:
-  - standalone Vercel hosting
-  - routed deployment at <code>/portfolio-dashboard/</code></p>
-
+<p>You should get:</p>
+<ul>
+<li>static app in <code>dist/</code></li>
+<li>relative asset paths suitable for:
+<ul>
+<li>standalone Vercel hosting</li>
+<li>routed deployment at <code>/portfolio-dashboard/</code></li>
+</ul>
+</li>
+</ul>
 <hr>
-
-<h2>Verify Live Production</h2>
-
-<h3>Main domain route</h3>
-
-<pre><code class="language-text">https://as-hobby-labs.com/portfolio-dashboard/
+<h2 id="check-the-live-version" tabindex="-1"><a class="header-anchor" href="#check-the-live-version">Check The Live Version</a></h2>
+<h3 id="main-domain-route" tabindex="-1"><a class="header-anchor" href="#main-domain-route">Main domain route</a></h3>
+<pre><code class="hljs language-text">https://as-hobby-labs.com/portfolio-dashboard/
 </code></pre>
-
-<h3>Direct Vercel deployment</h3>
-
-<pre><code class="language-text">https://portfolio-dashboard-two-pearl.vercel.app
+<h3 id="direct-vercel-deployment" tabindex="-1"><a class="header-anchor" href="#direct-vercel-deployment">Direct Vercel deployment</a></h3>
+<pre><code class="hljs language-text">https://portfolio-dashboard-two-pearl.vercel.app
 </code></pre>
-
-<h3>Live API checks</h3>
-
+<h3 id="live-api-checks" tabindex="-1"><a class="header-anchor" href="#live-api-checks">Live API checks</a></h3>
 <p>Quotes:</p>
-
-<pre><code class="language-bash">curl 'https://as-hobby-labs.com/portfolio-dashboard/api/quotes?symbols=AAPL'
+<pre><code class="hljs language-bash">curl <span class="hljs-string">&#x27;https://as-hobby-labs.com/portfolio-dashboard/api/quotes?symbols=AAPL&#x27;</span>
 </code></pre>
-
 <p>Yahoo chart:</p>
-
-<pre><code class="language-bash">curl 'https://as-hobby-labs.com/portfolio-dashboard/api/yahoo-chart?ticker=AAPL&amp;period1=1704067200&amp;period2=1735689600'
+<pre><code class="hljs language-bash">curl <span class="hljs-string">&#x27;https://as-hobby-labs.com/portfolio-dashboard/api/yahoo-chart?ticker=AAPL&amp;period1=1704067200&amp;period2=1735689600&#x27;</span>
 </code></pre>
-
 <hr>
-
-<h2>Environment Variables</h2>
-
+<h2 id="environment-variables" tabindex="-1"><a class="header-anchor" href="#environment-variables">Environment Variables</a></h2>
 <p>For live market overlays, configure:</p>
-
-<pre><code class="language-text">FINNHUB_API_KEY
+<pre><code class="hljs language-text">FINNHUB_API_KEY
 FMP_API_KEY
 </code></pre>
-
 <p>These can live in:</p>
-
-<p>- local <code>.env.local</code>
-- Vercel project environment variables</p>
-
+<ul>
+<li>local <code>.env.local</code></li>
+<li>Vercel project environment variables</li>
+</ul>
 <hr>
-
-<h2>Core Files</h2>
-
+<h2 id="files-you-will-most-likely-touch" tabindex="-1"><a class="header-anchor" href="#files-you-will-most-likely-touch">Files You Will Most Likely Touch</a></h2>
 <table>
-<tr><th>File</th><th>Purpose</th></tr>
-<tr><td><code>src/App.jsx</code></td><td>UI, simulation engine, VaR logic, live data orchestration</td></tr>
-<tr><td><code>vite.config.js</code></td><td>Vite config plus dev/preview middleware for API routes</td></tr>
-<tr><td><code>api/yahoo-chart.js</code></td><td>production serverless Yahoo Finance proxy</td></tr>
-<tr><td><code>vercel.json</code></td><td>Vercel production build/output/rewrite config</td></tr>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>src/App.jsx</code></td>
+<td>UI, simulation engine, VaR logic, live data orchestration</td>
+</tr>
+<tr>
+<td><code>vite.config.js</code></td>
+<td>Vite config plus dev/preview middleware for API routes</td>
+</tr>
+<tr>
+<td><code>api/yahoo-chart.js</code></td>
+<td>production serverless Yahoo Finance proxy</td>
+</tr>
+<tr>
+<td><code>vercel.json</code></td>
+<td>Vercel production build/output/rewrite config</td>
+</tr>
+</tbody>
 </table>
-
 <hr>
-
-<h2>Common Maintenance Tasks</h2>
-
-<h3>Update production documentation</h3>
-
+<h2 id="common-maintenance-tasks" tabindex="-1"><a class="header-anchor" href="#common-maintenance-tasks">Common Maintenance Tasks</a></h2>
+<h3 id="update-the-docs" tabindex="-1"><a class="header-anchor" href="#update-the-docs">Update the docs</a></h3>
 <p>Edit:</p>
-
-<p>- <code>README.md</code>
-- <code>portfolio-doco/README.md</code>
-- this documentation set</p>
-
-<h3>Check deployment-safe asset behavior</h3>
-
+<ul>
+<li><code>README.md</code></li>
+<li><code>portfolio-doco/README.md</code></li>
+<li>this documentation set</li>
+</ul>
+<h3 id="check-path-safe-asset-behavior" tabindex="-1"><a class="header-anchor" href="#check-path-safe-asset-behavior">Check path-safe asset behavior</a></h3>
 <p>Confirm <code>vite.config.js</code> still uses:</p>
-
-<pre><code class="language-js">base: "./"
+<pre><code class="hljs language-js"><span class="hljs-attr">base</span>: <span class="hljs-string">&quot;./&quot;</span>
 </code></pre>
-
-<h3>Re-deploy</h3>
-
+<h3 id="deploy-an-update" tabindex="-1"><a class="header-anchor" href="#deploy-an-update">Deploy an update</a></h3>
 <p>Git-connected deployment:</p>
-
-<pre><code class="language-bash">git add .
-git commit -m "Update portfolio dashboard"
+<pre><code class="hljs language-bash">git add .
+git commit -m <span class="hljs-string">&quot;Update portfolio dashboard&quot;</span>
 git push origin main
 </code></pre>
-
 <p>Manual production deploy:</p>
-
-<pre><code class="language-bash">vercel --prod --yes
+<pre><code class="hljs language-bash">vercel --prod --<span class="hljs-built_in">yes</span>
 </code></pre>
-    </main>
-    
-    <footer>
-        <p>Portfolio Optimization Documentation | Generated on 2026-03-17 15:03</p>
-        <p>Built with Python, MathJax, and Highlight.js</p>
-    </footer>
+
+        <div class="footer">Source project: <code>/Users/A/portfolio-doco</code></div>
+      </article>
+    </section>
+  </main>
 </body>
 </html>
