@@ -28,7 +28,7 @@ The dashboard works with a few core ingredients:
 - a weight for each stock
 - an expected return for each stock
 - a covariance matrix showing how stocks move together
-- a user-selected annualized risk-free rate
+- a fixed risk-free rate of `4%`
 
 The portfolio rules are intentionally simple:
 
@@ -68,7 +68,7 @@ $$
 Where:
 
 - $R_p$ is portfolio return
-- $R_f$ is the user-selected annualized risk-free rate
+- $R_f$ is the fixed `4%` risk-free rate
 - $\sigma_p$ is portfolio volatility
 
 Higher Sharpe means better return for the amount of risk taken.
@@ -200,6 +200,8 @@ The deterministic engine works over the simplex of valid portfolios:
 $$
 \Delta = \{ \mathbf{w} \in \mathbb{R}^n \mid w_i \ge 0,\; \sum_{i=1}^{n} w_i = 1 \}
 $$
+
+This avoids the `\left` delimiter issue and states the same feasible set cleanly.
 
 #### Projected optimization idea
 

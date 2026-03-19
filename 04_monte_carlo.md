@@ -1,7 +1,7 @@
 **Author:** Amadea Schaum  
 **Date:** March 2026
 
-# Optimization Method Considerations
+# Optimization Approaches / Methodology
 
 This page explains the optimization methods used in the Portfolio Dashboard and how Monte Carlo and deterministic approaches differ in the current production app.
 
@@ -28,7 +28,7 @@ Both engines work with the same portfolio inputs:
 - selected stock tickers
 - expected return vector
 - historical covariance matrix
-- user-selected annualized risk-free rate
+- fixed risk-free rate of `4%`
 - long-only constraint
 - fully invested constraint
 
