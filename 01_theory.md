@@ -9,15 +9,14 @@ This page explains the logic behind the Portfolio Dashboard in plain language.
 
 The dashboard is trying to answer a simple question:
 
-- if you choose a set of stocks, what mix of weights looks most attractive under different portfolio goals?
+- given a portfolio objective, what stock mix and weight allocation best satisfies it?
 
-To do that, the app:
+It answers that by:
 
-- estimates return from market data
-- measures how the chosen stocks move together
-- generates many candidate portfolios
-- scores those portfolios
-- surfaces the most interesting ones in the UI
+- estimating return and risk from market data
+- generating many candidate portfolios
+- scoring those portfolios against the chosen objective
+- surfacing the strongest result for each portfolio view
 
 ---
 
