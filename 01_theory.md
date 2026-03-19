@@ -362,7 +362,7 @@ These fields do not replace the portfolio engine.
 
 ---
 
-## Important Limits
+## Implementation Limitations
 
 This is still a simplified analytical tool.
 

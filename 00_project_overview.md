@@ -43,23 +43,17 @@ Production deployment is live at:
 
 The current production dashboard supports:
 
-A. Monte Carlo portfolio simulation across user-selected stock counts and simulation passes
-
-B. Deterministic optimization across the same stock set
-
-C. Comparison of **Best Min Variance by Sharpe**, **Best Max Sharpe**, and **True Min Variance** portfolios
-
-D. User-set annualized volatility threshold for **Best Min Variance by Sharpe** in deterministic mode
-
-E. User-set annualized risk-free rate for Sharpe calculations
-F. Historical and parametric VaR analysis
-G. Live quote overlays
-H. Analyst target price and rating overlays
-I. Production-safe deployment on both:
-
-- its own Vercel project domain
-
-- the routed path `as-hobby-labs.com/portfolio-dashboard/`
+- Monte Carlo portfolio simulation across user-selected stock counts and simulation passes
+- Deterministic optimization across the same stock set
+- Comparison of **Best Min Variance by Sharpe**, **Best Max Sharpe**, and **True Min Variance** portfolios
+- User-set annualized volatility threshold for **Best Min Variance by Sharpe** in deterministic mode
+- User-set annualized risk-free rate for Sharpe calculations
+- Historical and parametric VaR analysis
+- Live quote overlays
+- Analyst target price and rating overlays
+- Production-safe deployment on both:
+  - its own Vercel project domain
+  - the routed path `as-hobby-labs.com/portfolio-dashboard/`
 
 ---
 
