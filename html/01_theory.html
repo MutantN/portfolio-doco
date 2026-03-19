@@ -249,115 +249,120 @@
         <p><strong>Author:</strong> Amadea Schaum<br>
 <strong>Date:</strong> March 2026</p>
 <h1 id="portfolio-dashboard-theory" tabindex="-1"><a class="header-anchor" href="#portfolio-dashboard-theory">Portfolio Dashboard Theory</a></h1>
-<h2 id="what-this-page-explains" tabindex="-1"><a class="header-anchor" href="#what-this-page-explains">What This Page Explains</a></h2>
-<p>This page explains the logic behind the Portfolio Dashboard in plain language.</p>
-<p>The dashboard is trying to answer a simple question:</p>
+<h2 id="the-big-idea" tabindex="-1"><a class="header-anchor" href="#the-big-idea">The Big Idea</a></h2>
+<p>The dashboard takes a set of stocks, learns from their historical return patterns, and then looks for portfolio weight mixes that suit different goals.</p>
+<p>In plain terms:</p>
 <ul>
-<li>if you choose a set of stocks, what mix of weights looks most attractive under different portfolio goals?</li>
-</ul>
-<p>To do that, the app:</p>
-<ul>
-<li>estimates return from market data</li>
-<li>measures how the chosen stocks move together</li>
-<li>generates many candidate portfolios</li>
-<li>scores those portfolios</li>
-<li>surfaces the most interesting ones in the UI</li>
+<li>
+<p>it estimates expected return from historical data</p>
+</li>
+<li>
+<p>it can also estimate modeled returns from analyst target upside</p>
+</li>
+<li>
+<p>it estimates how the stocks move together</p>
+</li>
+<li>
+<p>it samples many candidate portfolios</p>
+</li>
+<li>
+<p>it keeps the portfolios that best fit each objective</p>
+</li>
+<li>
+<p>it reports return, volatility, Sharpe ratio, and VaR-style risk summaries</p>
+</li>
 </ul>
 <hr>
-<h2 id="the-building-blocks" tabindex="-1"><a class="header-anchor" href="#the-building-blocks">The Building Blocks</a></h2>
-<p>The dashboard works with a few core ingredients:</p>
+<h2 id="notation" tabindex="-1"><a class="header-anchor" href="#notation">Notation</a></h2>
 <ul>
-<li>a list of selected stocks</li>
-<li>a weight for each stock</li>
-<li>an expected return for each stock</li>
-<li>a covariance matrix showing how stocks move together</li>
-<li>a fixed risk-free rate of <code>4%</code></li>
+<li>$n$ = number of assets</li>
+<li>$\mathbf{w} = (w_1, \dots, w_n)^\top$ = portfolio weights</li>
+<li>$\boldsymbol{\mu}$ = annualized expected return vector</li>
+<li>$\boldsymbol{\Sigma}$ = annualized covariance matrix</li>
+<li>$R_f = 0.04$ = fixed annual risk-free rate in the current production app</li>
 </ul>
-<p>The portfolio rules are intentionally simple:</p>
+<p>The current production app keeps the rules simple:</p>
 <ul>
-<li>weights cannot be negative</li>
-<li>weights must add up to 1</li>
+<li>
+<p>$w_i \ge 0$</p>
+</li>
+<li>
+<p>$\sum_i w_i = 1$</p>
+</li>
 </ul>
-<p>That means the dashboard is always showing a long-only, fully invested portfolio.</p>
 <hr>
-<h2 id="the-main-portfolio-measures" tabindex="-1"><a class="header-anchor" href="#the-main-portfolio-measures">The Main Portfolio Measures</a></h2>
-<h3 id="expected-return" tabindex="-1"><a class="header-anchor" href="#expected-return">Expected return</a></h3>
-<p>The dashboard combines stock-level expected returns into a portfolio-level expected return:</p>
+<h2 id="the-core-numbers" tabindex="-1"><a class="header-anchor" href="#the-core-numbers">The Core Numbers</a></h2>
+<h3 id="expected-return" tabindex="-1"><a class="header-anchor" href="#expected-return">Expected Return</a></h3>
 <p>$$
 R_p = \mathbf{w}^\top \boldsymbol{\mu}
 $$</p>
-<p>In plain English:</p>
-<ul>
-<li>each stock gets a weight</li>
-<li>each stock has an expected return</li>
-<li>the portfolio return is the weighted combination of those returns</li>
-</ul>
 <h3 id="volatility" tabindex="-1"><a class="header-anchor" href="#volatility">Volatility</a></h3>
-<p>Portfolio risk is represented by volatility:</p>
 <p>$$
 \sigma_p = \sqrt{\mathbf{w}^\top \boldsymbol{\Sigma} \mathbf{w}}
 $$</p>
-<p>This captures two things at once:</p>
-<ul>
-<li>how volatile each stock is by itself</li>
-<li>how the stocks move together</li>
-</ul>
-<h3 id="sharpe-ratio" tabindex="-1"><a class="header-anchor" href="#sharpe-ratio">Sharpe ratio</a></h3>
-<p>The dashboard ranks risk-adjusted performance with a Sharpe ratio:</p>
+<h3 id="sharpe-ratio" tabindex="-1"><a class="header-anchor" href="#sharpe-ratio">Sharpe Ratio</a></h3>
 <p>$$
 \text{Sharpe} = \frac{R_p - R_f}{\sigma_p}
 $$</p>
-<p>Where:</p>
-<ul>
-<li>$R_p$ is portfolio return</li>
-<li>$R_f$ is the fixed <code>4%</code> risk-free rate</li>
-<li>$\sigma_p$ is portfolio volatility</li>
-</ul>
-<p>Higher Sharpe means better return for the amount of risk taken.</p>
+<p>The dashboard uses this fixed-rate Sharpe formula when it ranks portfolios.</p>
 <hr>
-<h2 id="the-three-portfolio-views-in-the-dashboard" tabindex="-1"><a class="header-anchor" href="#the-three-portfolio-views-in-the-dashboard">The Three Portfolio Views In The Dashboard</a></h2>
-<p>The dashboard focuses on three portfolio views.</p>
-<h3 id="1.-best-min-variance-by-sharpe" tabindex="-1"><a class="header-anchor" href="#1.-best-min-variance-by-sharpe">1. Best Min Variance by Sharpe</a></h3>
-<p>This is meant to represent the strongest risk-adjusted portfolio within the low-volatility part of the search results.</p>
-<p>You can think of it as:</p>
-<ul>
-<li>stay in the safer part of the opportunity set</li>
-<li>then choose the candidate with the better Sharpe profile inside that group</li>
-</ul>
-<h3 id="2.-best-max-sharpe" tabindex="-1"><a class="header-anchor" href="#2.-best-max-sharpe">2. Best Max Sharpe</a></h3>
-<p>This is the clearest best risk-adjusted return portfolio in the dashboard.</p>
-<p>It is the portfolio that gives the strongest Sharpe ratio among the sampled candidates.</p>
-<h3 id="3.-true-min-variance" tabindex="-1"><a class="header-anchor" href="#3.-true-min-variance">3. True Min Variance</a></h3>
-<p>This is the absolute lowest-volatility portfolio found by the search.</p>
-<p>It does not try to improve return once volatility has been minimized.</p>
-<p>That makes it the most conservative portfolio view shown in the app.</p>
+<h2 id="the-three-main-portfolio-views" tabindex="-1"><a class="header-anchor" href="#the-three-main-portfolio-views">The Three Main Portfolio Views</a></h2>
+<h3 id="best-min-variance-by-sharpe" tabindex="-1"><a class="header-anchor" href="#best-min-variance-by-sharpe">Best Min Variance by Sharpe</a></h3>
+<p>This is the lowest-volatility family of portfolios filtered for the strongest Sharpe outcome inside that group.</p>
+<p>$$
+\min_{\mathbf{w}} \mathbf{w}^\top \boldsymbol{\Sigma} \mathbf{w}
+$$</p>
+<h3 id="best-max-sharpe" tabindex="-1"><a class="header-anchor" href="#best-max-sharpe">Best Max Sharpe</a></h3>
+<p>This is the dashboard’s strongest risk-adjusted portfolio.</p>
+<p>$$
+\max_{\mathbf{w}} \frac{\mathbf{w}^\top \boldsymbol{\mu} - R_f}{\sqrt{\mathbf{w}^\top \boldsymbol{\Sigma} \mathbf{w}}}
+$$</p>
+<h3 id="true-min-variance" tabindex="-1"><a class="header-anchor" href="#true-min-variance">True Min Variance</a></h3>
+<p>This is the absolute lowest-volatility portfolio the search keeps, even if its return is less attractive.</p>
+<p>$$
+\min_{\mathbf{w}} \mathbf{w}^\top \boldsymbol{\Sigma} \mathbf{w}
+$$</p>
 <hr>
-<h2 id="how-the-optimization-method-works" tabindex="-1"><a class="header-anchor" href="#how-the-optimization-method-works">How The Optimization Method Works</a></h2>
+<h2 id="how-the-search-works" tabindex="-1"><a class="header-anchor" href="#how-the-search-works">How The Search Works</a></h2>
+<p>The production dashboard does <strong>not</strong> use a formal quadratic solver for the live UI path. Instead, it generates many random long-only weight sets and keeps the best candidates for each objective.</p>
+<h2 id="optimization-method" tabindex="-1"><a class="header-anchor" href="#optimization-method">Optimization Method</a></h2>
 <p>The dashboard uses a Monte Carlo search heuristic.</p>
-<p>It does <strong>not</strong> run a classical deterministic optimizer in the live UI path.</p>
-<p>Instead, it does this:</p>
-<ol>
-<li>generate many random candidate weight sets</li>
-<li>normalize each weight set so total allocation is 100%</li>
-<li>calculate return, volatility, and Sharpe for each candidate</li>
-<li>keep the strongest candidates for the relevant portfolio objective</li>
-</ol>
-<p>In the current implementation, each optimization pass evaluates 2,000 candidate weight sets.</p>
+<p>In practice, that means:</p>
+<ul>
+<li>
+<p>it generates many random long-only weight sets</p>
+</li>
+<li>
+<p>each weight set is normalized so total allocation sums to 1</p>
+</li>
+<li>
+<p>each candidate portfolio is scored using return, volatility, and Sharpe ratio</p>
+</li>
+<li>
+<p>the dashboard keeps the strongest candidate for the relevant objective</p>
+</li>
+<li>
+<p>the search runs repeatedly with seeded randomness so the same simulation can be reproduced</p>
+</li>
+</ul>
+<p>The current implementation samples 2,000 candidate weight sets per optimization pass.</p>
 <h3 id="random-weight-generation" tabindex="-1"><a class="header-anchor" href="#random-weight-generation">Random weight generation</a></h3>
-<p>If random positive values $u_i$ are drawn, the app converts them to valid weights like this:</p>
+<p>If random positive weights $u_i$ are drawn, production normalizes them as:</p>
 <p>$$
 w_i = \frac{u_i}{\sum_{j=1}^{n} u_j}
 $$</p>
 <p>That guarantees:</p>
 <ul>
-<li>every weight stays non-negative</li>
-<li>all weights sum to 1</li>
+<li>
+<p>all weights are non-negative</p>
+</li>
+<li>
+<p>total allocation sums to 1</p>
+</li>
 </ul>
-<p>This approach is practical for an interactive dashboard because it is simple, fast, and easy to rerun.</p>
 <hr>
-<h2 id="how-historical-returns-are-built" tabindex="-1"><a class="header-anchor" href="#how-historical-returns-are-built">How Historical Returns Are Built</a></h2>
-<p>The historical mode starts from Yahoo Finance price history.</p>
-<p>From that data, the dashboard builds daily returns and annualizes them using a 252-trading-day convention.</p>
+<h2 id="how-historical-data-becomes-portfolio-inputs" tabindex="-1"><a class="header-anchor" href="#how-historical-data-becomes-portfolio-inputs">How Historical Data Becomes Portfolio Inputs</a></h2>
+<p>The app builds daily returns from Yahoo Finance price history and annualizes them using a 252-trading-day convention.</p>
 <h3 id="annualized-mean-return" tabindex="-1"><a class="header-anchor" href="#annualized-mean-return">Annualized mean return</a></h3>
 <p>$$
 \mu_i = 252 \cdot \frac{1}{T} \sum_{t=1}^{T} r_{it}
@@ -366,77 +371,85 @@ $$</p>
 <p>$$
 \sigma_{ij} = 252 \cdot \text{Cov}(r_i, r_j)
 $$</p>
-<p>This historical return and covariance framework is the base model underneath the dashboard.</p>
 <hr>
 <h2 id="how-modeled-returns-work" tabindex="-1"><a class="header-anchor" href="#how-modeled-returns-work">How Modeled Returns Work</a></h2>
 <p>The dashboard also supports a modeled return mode.</p>
-<p>This mode does <strong>not</strong> replace the historical framework entirely. Instead, it changes the expected return input while keeping covariance historical.</p>
-<p>The modeled return path blends:</p>
+<p>Instead of relying only on historical annualized mean returns, it can blend:</p>
 <ul>
-<li>target-implied return from analyst target prices</li>
-<li>historical annualized mean return</li>
+<li>
+<p>target-implied return from analyst targets</p>
+</li>
+<li>
+<p>historical annualized mean return</p>
+</li>
 </ul>
-<h3 id="target-implied-return" tabindex="-1"><a class="header-anchor" href="#target-implied-return">Target-implied return</a></h3>
-<p>Conceptually, the dashboard derives implied upside as:</p>
+<p>The target-implied return is conceptually:</p>
 <p>$$
 \text{implied return} = \frac{\text{target price}}{\text{current price}} - 1
 $$</p>
-<h3 id="blending-logic" tabindex="-1"><a class="header-anchor" href="#blending-logic">Blending logic</a></h3>
 <p>That implied return is then blended with the historical mean.</p>
-<p>The blend weight depends on analyst confidence, using analyst count as a proxy.</p>
+<p>The blend weight increases with analyst confidence, which is proxied by analyst count.</p>
 <p>In practical terms:</p>
 <ul>
-<li>more analyst coverage gives more influence to the modeled return</li>
-<li>less analyst coverage leaves more influence on the historical return estimate</li>
-<li>covariance still comes from historical daily returns</li>
+<li>
+<p>more analyst coverage gives more weight to the modeled return</p>
+</li>
+<li>
+<p>less analyst coverage leaves more weight on the historical mean</p>
+</li>
+<li>
+<p>covariance remains historical even when returns are modeled</p>
+</li>
 </ul>
 <p>So the modeled mode changes the expected return vector, but not the covariance matrix.</p>
 <hr>
 <h2 id="how-risk-is-presented" tabindex="-1"><a class="header-anchor" href="#how-risk-is-presented">How Risk Is Presented</a></h2>
-<p>The dashboard supports two VaR-style risk views.</p>
 <h3 id="historical-var-proxy" tabindex="-1"><a class="header-anchor" href="#historical-var-proxy">Historical VaR proxy</a></h3>
-<p>This is the more intuitive option.</p>
-<p>It looks back through realized return history and asks:</p>
-<ul>
-<li>what was the worst rolling loss over the selected history window?</li>
-</ul>
-<p>This gives a stress-style view based on what actually happened in the past.</p>
+<p>This is the more intuitive setting. It looks back through realized history and asks, “what was the worst rolling loss over this period?”</p>
 <h3 id="parametric-var" tabindex="-1"><a class="header-anchor" href="#parametric-var">Parametric VaR</a></h3>
-<p>This is the smoother, model-based option.</p>
-<p>It uses annualized mean and annualized volatility with a normal approximation:</p>
+<p>The app also supports a smoother, model-based normal approximation.</p>
 <p>$$
 \text{VaR} = \mu_{\text{annual}} + z_p \sigma_{\text{annual}}
 $$</p>
-<p>Here the left-tail probability is interpreted as a <code>1 / N years</code> event.</p>
-<p>This method is cleaner mathematically, but it depends more heavily on modeling assumptions.</p>
+<p>where the left-tail probability is interpreted as <code>1 / N years</code>.</p>
 <hr>
 <h2 id="where-live-data-fits-in" tabindex="-1"><a class="header-anchor" href="#where-live-data-fits-in">Where Live Data Fits In</a></h2>
-<p>The optimization engine is still driven by return and covariance modeling, but the dashboard adds live context on top of that model.</p>
-<p>The live overlay layer includes:</p>
+<p>The optimization engine is still driven by historical returns and covariance, but the dashboard adds live market context on top:</p>
 <ul>
-<li>Finnhub quote data for current price and previous close</li>
-<li>FMP analyst target, rating, and analyst-count data</li>
+<li>
+<p>Finnhub quote data for latest price</p>
+</li>
+<li>
+<p>FMP analyst target consensus and rating data</p>
+</li>
 </ul>
-<p>These fields do not replace the portfolio engine.</p>
-<p>They help answer questions like:</p>
-<ul>
-<li>what does this portfolio look like right now?</li>
-<li>how does analyst sentiment compare with the historical picture?</li>
-</ul>
+<p>These fields do not replace the optimization model. They help explain what the simulated portfolios look like in the market right now.</p>
 <hr>
 <h2 id="important-limits" tabindex="-1"><a class="header-anchor" href="#important-limits">Important Limits</a></h2>
-<p>This is still a simplified analytical tool.</p>
-<p>It does <strong>not</strong> model:</p>
 <ul>
-<li>shorting</li>
-<li>leverage</li>
-<li>taxes</li>
-<li>transaction costs</li>
-<li>slippage</li>
-<li>liquidity constraints</li>
-<li>a full deterministic efficient-frontier solver</li>
+<li>
+<p>no shorting</p>
+</li>
+<li>
+<p>no leverage</p>
+</li>
+<li>
+<p>no transaction costs</p>
+</li>
+<li>
+<p>no taxes</p>
+</li>
+<li>
+<p>no slippage</p>
+</li>
+<li>
+<p>no liquidity modeling</p>
+</li>
+<li>
+<p>no deterministic frontier solver</p>
+</li>
 </ul>
-<p>So the dashboard is best understood as an exploratory portfolio analysis tool, not a trading system or execution engine.</p>
+<p>This is an exploratory portfolio analysis tool, not an order management or execution system.</p>
 
         <div class="footer">Source project: <code>/Users/A/portfolio-doco</code></div>
       </article>
