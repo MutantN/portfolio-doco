@@ -278,7 +278,7 @@ function pageTemplate({ title, body, nav, currentFile }) {
           ${nav
             .map(
               (item) =>
-                `<li><a class="${item.file === currentFile ? "active" : ""}" href="${item.file.replace(/\\.md$/, ".html")}">${item.title}</a></li>`,
+                `<li><a class="${item.file === currentFile ? "active" : ""}" href="${item.file.replace(/\.md$/, ".html")}">${item.title}</a></li>`,
             )
             .join("")}
         </ul>
