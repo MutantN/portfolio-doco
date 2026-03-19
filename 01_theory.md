@@ -1,11 +1,11 @@
 **Author:** Amadea Schaum  
 **Date:** March 2026
 
-# Theoretical Background
+# Portfolio Objective And Theoretical Background
 
 ## What This Page Explains
 
-This page explains the logic behind the Portfolio Dashboard in plain language.
+This page explains the analytical goal of the Portfolio Dashboard and the mathematical ideas behind it.
 
 The dashboard is trying to answer a simple question:
 
@@ -49,12 +49,6 @@ $$
 R_p = \mathbf{w}^\top \boldsymbol{\mu}
 $$
 
-In plain English:
-
-- each stock gets a weight
-- each stock has an expected return
-- the portfolio return is the weighted combination of those returns
-
 ### Volatility
 
 Portfolio risk is represented by volatility:
@@ -62,11 +56,6 @@ Portfolio risk is represented by volatility:
 $$
 \sigma_p = \sqrt{\mathbf{w}^\top \boldsymbol{\Sigma} \mathbf{w}}
 $$
-
-This captures two things at once:
-
-- how volatile each stock is by itself
-- how the stocks move together
 
 ### Sharpe ratio
 
@@ -146,7 +135,7 @@ It does not try to improve return once volatility has been minimized.
 
 ## Optimization Methodology
 
-The dashboard now supports two optimization engines.
+The dashboard supports two optimization engines.
 
 ### Monte Carlo engine
 
@@ -192,7 +181,7 @@ $$
 
 The engine then keeps the candidate that best matches the target objective.
 
-This approach is simple and flexible, but it is a search heuristic rather than an exact optimizer.
+This approach is flexible and easy to run interactively, but it is a search heuristic rather than an exact optimizer.
 
 ### Deterministic engine
 
@@ -206,11 +195,13 @@ It is used for:
 
 #### Feasible set
 
-The deterministic engine works on the simplex:
+The deterministic engine works over the simplex of valid portfolios:
 
 $$
-\Delta = \left\{ \mathbf{w} \in \mathbb{R}^n : w_i \ge 0,\; \sum_{i=1}^{n} w_i = 1 \right\}
+\Delta = \{ \mathbf{w} \in \mathbb{R}^n \mid w_i \ge 0,\; \sum_{i=1}^{n} w_i = 1 \}
 $$
+
+This avoids the `\left` delimiter issue and states the same feasible set cleanly.
 
 #### Projected optimization idea
 
@@ -346,8 +337,6 @@ $$
 
 Here the left-tail probability is interpreted as a `1 / N years` event.
 
-This method is cleaner mathematically, but it depends more heavily on modeling assumptions.
-
 ---
 
 ## Where Live Data Fits In
@@ -360,11 +349,6 @@ The live overlay layer includes:
 - FMP analyst target, rating, and analyst-count data
 
 These fields do not replace the portfolio engine.
-
-They help answer questions like:
-
-- what does this portfolio look like right now?
-- how does analyst sentiment compare with the historical picture?
 
 ---
 
@@ -381,5 +365,3 @@ It does **not** model:
 - slippage
 - liquidity constraints
 - a full deterministic efficient-frontier solver
-
-So the dashboard is best understood as an exploratory portfolio analysis tool, not a trading system or execution engine.
