@@ -4,7 +4,7 @@ import MarkdownIt from "markdown-it";
 import markdownItAnchor from "markdown-it-anchor";
 import hljs from "highlight.js";
 
-const ROOT = process.cwd();
+const ROOT = "/Users/A/portfolio-doco";
 const OUTPUT_DIR = path.join(ROOT, "html");
 const SKIP_FILES = new Set(["package-lock.json"]);
 
