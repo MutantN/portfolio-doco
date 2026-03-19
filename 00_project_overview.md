@@ -43,7 +43,7 @@ Production deployment is live at:
 
 The current production dashboard supports:
 
-A. Monte Carlo portfolio simulation across a chosen stock set
+A. Monte Carlo portfolio simulation across user-selected stock counts and simulation passes
 
 B. Deterministic optimization across the same stock set
 
@@ -51,13 +51,11 @@ C. Comparison of **Best Min Variance by Sharpe**, **Best Max Sharpe**, and **Tru
 
 D. User-set annualized volatility threshold for **Best Min Variance by Sharpe** in deterministic mode
 
-E. Historical and parametric VaR analysis
-
-F. Live quote overlays
-
-G. Analyst target price and rating overlays
-
-H. Production-safe deployment on both:
+E. User-set annualized risk-free rate for Sharpe calculations
+F. Historical and parametric VaR analysis
+G. Live quote overlays
+H. Analyst target price and rating overlays
+I. Production-safe deployment on both:
 
 - its own Vercel project domain
 
@@ -132,19 +130,31 @@ H. Production-safe deployment on both:
 
 ### Risk model
 
-- Fixed risk-free rate: `4%`
+- User-selected annualized risk-free rate for Sharpe calculations
 
 - Weight constraints: long-only and fully invested
 
 - Optimization engines:
 
-  - Monte Carlo random-weight search
+  - Monte Carlo search across user-selected simulation passes
 
-  - deterministic projected optimization
+    - each simulation pass randomly selects the chosen number of stocks from the S&P 500 list
+
+    - each objective search inside that pass samples 2,000 random candidate weight sets
+
+    - the app runs separate Monte Carlo searches for min variance, max Sharpe, and max return on that stock subset
+
+  - deterministic optimization
+
+    - projected optimization for unconstrained deterministic objectives
+
+    - hard feasible-search path for capped **Best Min Variance by Sharpe**
 
 - Deterministic Best Min Variance by Sharpe rule:
 
   - maximize Sharpe subject to a user-set annualized volatility cap
+
+  - the cap applies only to **Best Min Variance by Sharpe**, not to **True Min Variance** or **Best Max Sharpe**
 
 - VaR methods:
 

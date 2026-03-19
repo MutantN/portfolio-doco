@@ -313,14 +313,15 @@
 <hr>
 <h2 id="what-you-can-do-in-it" tabindex="-1"><a class="header-anchor" href="#what-you-can-do-in-it">What You Can Do In It</a></h2>
 <p>The current production dashboard supports:</p>
-<p>A. Monte Carlo portfolio simulation across a chosen stock set</p>
+<p>A. Monte Carlo portfolio simulation across user-selected stock counts and simulation passes</p>
 <p>B. Deterministic optimization across the same stock set</p>
 <p>C. Comparison of <strong>Best Min Variance by Sharpe</strong>, <strong>Best Max Sharpe</strong>, and <strong>True Min Variance</strong> portfolios</p>
 <p>D. User-set annualized volatility threshold for <strong>Best Min Variance by Sharpe</strong> in deterministic mode</p>
-<p>E. Historical and parametric VaR analysis</p>
-<p>F. Live quote overlays</p>
-<p>G. Analyst target price and rating overlays</p>
-<p>H. Production-safe deployment on both:</p>
+<p>E. User-set annualized risk-free rate for Sharpe calculations
+F. Historical and parametric VaR analysis
+G. Live quote overlays
+H. Analyst target price and rating overlays
+I. Production-safe deployment on both:</p>
 <ul>
 <li>
 <p>its own Vercel project domain</p>
@@ -418,7 +419,7 @@
 <h3 id="risk-model" tabindex="-1"><a class="header-anchor" href="#risk-model">Risk model</a></h3>
 <ul>
 <li>
-<p>Fixed risk-free rate: <code>4%</code></p>
+<p>User-selected annualized risk-free rate for Sharpe calculations</p>
 </li>
 <li>
 <p>Weight constraints: long-only and fully invested</p>
@@ -427,17 +428,41 @@
 <p>Optimization engines:</p>
 <ul>
 <li>
-<p>Monte Carlo random-weight search</p>
+<p>Monte Carlo search across user-selected simulation passes</p>
+<ul>
+<li>
+<p>each simulation pass randomly selects the chosen number of stocks from the S&amp;P 500 list</p>
 </li>
 <li>
-<p>deterministic projected optimization</p>
+<p>each objective search inside that pass samples 2,000 random candidate weight sets</p>
+</li>
+<li>
+<p>the app runs separate Monte Carlo searches for min variance, max Sharpe, and max return on that stock subset</p>
+</li>
+</ul>
+</li>
+<li>
+<p>deterministic optimization</p>
+<ul>
+<li>
+<p>projected optimization for unconstrained deterministic objectives</p>
+</li>
+<li>
+<p>hard feasible-search path for capped <strong>Best Min Variance by Sharpe</strong></p>
+</li>
+</ul>
 </li>
 </ul>
 </li>
 <li>
 <p>Deterministic Best Min Variance by Sharpe rule:</p>
 <ul>
-<li>maximize Sharpe subject to a user-set annualized volatility cap</li>
+<li>
+<p>maximize Sharpe subject to a user-set annualized volatility cap</p>
+</li>
+<li>
+<p>the cap applies only to <strong>Best Min Variance by Sharpe</strong>, not to <strong>True Min Variance</strong> or <strong>Best Max Sharpe</strong></p>
+</li>
 </ul>
 </li>
 <li>

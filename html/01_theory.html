@@ -342,15 +342,18 @@ $$</p>
 <h2 id="optimization-methodology" tabindex="-1"><a class="header-anchor" href="#optimization-methodology">Optimization Methodology</a></h2>
 <p>The dashboard supports two optimization engines.</p>
 <h3 id="monte-carlo-engine" tabindex="-1"><a class="header-anchor" href="#monte-carlo-engine">Monte Carlo engine</a></h3>
-<p>The Monte Carlo path generates many random candidate portfolios and scores them.</p>
+<p>The Monte Carlo path generates random stock subsets, then random candidate portfolios on each subset, and scores them.</p>
 <p>It does this:</p>
 <ol>
-<li>generate many random candidate weight sets</li>
+<li>run the user-selected number of simulation passes</li>
+<li>in each pass, randomly select the chosen number of stocks from the S&amp;P 500 list</li>
+<li>for each objective on that stock subset, generate many random candidate weight sets</li>
 <li>normalize each weight set so total allocation is 100%</li>
 <li>calculate return, volatility, and Sharpe for each candidate</li>
-<li>keep the strongest candidates for the relevant portfolio objective</li>
+<li>keep the strongest candidate for the relevant objective on that pass</li>
 </ol>
-<p>In the current implementation, each Monte Carlo optimization pass evaluates 2,000 candidate weight sets.</p>
+<p>In the current implementation, each Monte Carlo objective search evaluates 2,000 candidate weight sets.</p>
+<p>The user separately controls how many Monte Carlo passes are run.</p>
 <h4 id="random-weight-generation" tabindex="-1"><a class="header-anchor" href="#random-weight-generation">Random weight generation</a></h4>
 <p>If random positive values $u_i$ are drawn, the app converts them to valid weights like this:</p>
 <p>$$
@@ -372,10 +375,10 @@ $$</p>
 <p>$$
 \text{Sharpe}(\mathbf{w}) = \frac{R_p - R_f}{\sigma_p}
 $$</p>
-<p>The engine then keeps the candidate that best matches the target objective.</p>
+<p>The engine then keeps the candidate that best matches the target objective on that pass.</p>
 <p>This approach is flexible and easy to run interactively, but it is a search heuristic rather than an exact optimizer.</p>
 <h3 id="deterministic-engine" tabindex="-1"><a class="header-anchor" href="#deterministic-engine">Deterministic engine</a></h3>
-<p>The deterministic path replaces random search with projected optimization under the same long-only, fully invested constraints.</p>
+<p>The deterministic path replaces random search with direct optimization under the same long-only, fully invested constraints.</p>
 <p>It is used for:</p>
 <ul>
 <li>True Min Variance</li>
@@ -408,6 +411,7 @@ $$</p>
 <li>force the updated weights back into the valid long-only, fully invested region</li>
 <li>repeat until the solution stabilizes</li>
 </ol>
+<p>This projected optimization structure is used for the unconstrained deterministic objectives.</p>
 <h4 id="deterministic-objectives-in-the-dashboard" tabindex="-1"><a class="header-anchor" href="#deterministic-objectives-in-the-dashboard">Deterministic objectives in the dashboard</a></h4>
 <p>For True Min Variance, the objective is:</p>
 <p>$$
@@ -423,7 +427,13 @@ $$</p>
 \quad \text{subject to} \quad
 \sqrt{\mathbf{w}^\top \boldsymbol{\Sigma} \mathbf{w}} \le \sigma_{\max}
 $$</p>
-<p>This gives a faster and more stable comparison path than pure random sampling, while preserving the same portfolio constraints.</p>
+<p>In the current implementation, the capped case is handled by searching only among feasible portfolios that satisfy the volatility constraint, rather than by relying on an unconstrained penalty score alone.</p>
+<p>So the deterministic engine uses:</p>
+<ul>
+<li>projected optimization for <strong>True Min Variance</strong></li>
+<li>projected optimization for <strong>Best Max Sharpe</strong></li>
+<li>feasible constrained search for <strong>Best Min Variance by Sharpe</strong></li>
+</ul>
 <hr>
 <h2 id="how-historical-returns-are-built" tabindex="-1"><a class="header-anchor" href="#how-historical-returns-are-built">How Historical Returns Are Built</a></h2>
 <p>The historical mode starts from Yahoo Finance price history.</p>

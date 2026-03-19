@@ -139,16 +139,20 @@ The dashboard supports two optimization engines.
 
 ### Monte Carlo engine
 
-The Monte Carlo path generates many random candidate portfolios and scores them.
+The Monte Carlo path generates random stock subsets, then random candidate portfolios on each subset, and scores them.
 
 It does this:
 
-1. generate many random candidate weight sets
-2. normalize each weight set so total allocation is 100%
-3. calculate return, volatility, and Sharpe for each candidate
-4. keep the strongest candidates for the relevant portfolio objective
+1. run the user-selected number of simulation passes
+2. in each pass, randomly select the chosen number of stocks from the S&P 500 list
+3. for each objective on that stock subset, generate many random candidate weight sets
+4. normalize each weight set so total allocation is 100%
+5. calculate return, volatility, and Sharpe for each candidate
+6. keep the strongest candidate for the relevant objective on that pass
 
-In the current implementation, each Monte Carlo optimization pass evaluates 2,000 candidate weight sets.
+In the current implementation, each Monte Carlo objective search evaluates 2,000 candidate weight sets.
+
+The user separately controls how many Monte Carlo passes are run.
 
 #### Random weight generation
 
@@ -179,13 +183,13 @@ $$
 \text{Sharpe}(\mathbf{w}) = \frac{R_p - R_f}{\sigma_p}
 $$
 
-The engine then keeps the candidate that best matches the target objective.
+The engine then keeps the candidate that best matches the target objective on that pass.
 
 This approach is flexible and easy to run interactively, but it is a search heuristic rather than an exact optimizer.
 
 ### Deterministic engine
 
-The deterministic path replaces random search with projected optimization under the same long-only, fully invested constraints.
+The deterministic path replaces random search with direct optimization under the same long-only, fully invested constraints.
 
 It is used for:
 
@@ -226,6 +230,8 @@ Conceptually, this means:
 3. force the updated weights back into the valid long-only, fully invested region
 4. repeat until the solution stabilizes
 
+This projected optimization structure is used for the unconstrained deterministic objectives.
+
 #### Deterministic objectives in the dashboard
 
 For True Min Variance, the objective is:
@@ -248,7 +254,13 @@ $$
 \sqrt{\mathbf{w}^\top \boldsymbol{\Sigma} \mathbf{w}} \le \sigma_{\max}
 $$
 
-This gives a faster and more stable comparison path than pure random sampling, while preserving the same portfolio constraints.
+In the current implementation, the capped case is handled by searching only among feasible portfolios that satisfy the volatility constraint, rather than by relying on an unconstrained penalty score alone.
+
+So the deterministic engine uses:
+
+- projected optimization for **True Min Variance**
+- projected optimization for **Best Max Sharpe**
+- feasible constrained search for **Best Min Variance by Sharpe**
 
 ---
 

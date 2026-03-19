@@ -10,7 +10,7 @@ This page explains the optimization methods used in the Portfolio Dashboard and 
 The production dashboard supports two optimization engines:
 
 - Monte Carlo search
-- deterministic projected optimization
+- deterministic optimization
 
 This page explains:
 
@@ -58,7 +58,7 @@ $$
 
 ### Core idea
 
-The Monte Carlo engine samples many valid portfolios and keeps the strongest candidate for the chosen objective.
+The Monte Carlo engine samples stock subsets and valid portfolios, then keeps the strongest candidate for the chosen objective.
 
 ### Weight generation
 
@@ -77,12 +77,16 @@ This guarantees:
 
 The engine does this:
 
-1. generate random valid portfolios
-2. compute return, volatility, and Sharpe for each portfolio
-3. compare those sampled portfolios under the chosen objective
-4. retain the best sampled candidate
+1. run the user-selected number of simulation passes
+2. in each pass, randomly select the chosen number of stocks from the S&P 500 list
+3. for each objective on that stock subset, generate random valid portfolios
+4. compute return, volatility, and Sharpe for each portfolio
+5. compare those sampled portfolios under the chosen objective
+6. retain the best sampled candidate for that pass
 
-In the current dashboard implementation, each Monte Carlo pass evaluates 2,000 candidate weight sets.
+In the current dashboard implementation, each Monte Carlo objective search evaluates 2,000 candidate weight sets.
+
+The user separately controls how many Monte Carlo passes are run.
 
 ### Strengths
 
@@ -102,7 +106,7 @@ In the current dashboard implementation, each Monte Carlo pass evaluates 2,000 c
 
 ### Core idea
 
-The deterministic engine replaces random search with projected optimization over the same feasible portfolio set.
+The deterministic engine replaces random search with direct optimization over the same feasible portfolio set.
 
 ### Projection framework
 
@@ -121,6 +125,8 @@ Where:
 - $f(\mathbf{w})$ is the target objective
 - $\alpha_k$ is the step size
 - $\Pi_{\Delta}$ projects back to a valid long-only, fully invested portfolio
+
+This projection framework is used for the unconstrained deterministic objectives.
 
 ### Objectives used in the dashboard
 
@@ -146,6 +152,8 @@ $$
 
 This means the user chooses an annualized volatility cap and the optimizer finds the best risk-adjusted portfolio within that limit.
 
+In the current implementation, this capped portfolio is handled through a feasible constrained search path that only accepts portfolios satisfying the volatility cap.
+
 ### Strengths
 
 - faster and more stable for standard portfolio objectives
@@ -155,7 +163,7 @@ This means the user chooses an annualized volatility cap and the optimizer finds
 ### Weaknesses
 
 - less flexible than Monte Carlo for ad hoc search rules
-- still depends on the quality of the projected optimization routine
+- still depends on the quality of the projected and feasible-search routines
 - not a full industrial optimization stack or complete efficient-frontier solver
 
 ---
@@ -164,7 +172,7 @@ This means the user chooses an annualized volatility cap and the optimizer finds
 
 Monte Carlo answers the problem by sampling many admissible portfolios and keeping the best sampled one.
 
-Deterministic optimization answers the problem by moving directly through the feasible region toward a better solution under the stated objective.
+Deterministic optimization answers the problem by moving directly through the feasible region toward a better solution under the stated objective, and by enforcing the cap explicitly for the capped Sharpe portfolio.
 
 In practical dashboard terms:
 

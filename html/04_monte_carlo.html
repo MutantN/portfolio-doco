@@ -254,7 +254,7 @@
 <p>The production dashboard supports two optimization engines:</p>
 <ul>
 <li>Monte Carlo search</li>
-<li>deterministic projected optimization</li>
+<li>deterministic optimization</li>
 </ul>
 <p>This page explains:</p>
 <ul>
@@ -291,7 +291,7 @@ $$</p>
 <hr>
 <h2 id="monte-carlo-approach" tabindex="-1"><a class="header-anchor" href="#monte-carlo-approach">Monte Carlo Approach</a></h2>
 <h3 id="core-idea" tabindex="-1"><a class="header-anchor" href="#core-idea">Core idea</a></h3>
-<p>The Monte Carlo engine samples many valid portfolios and keeps the strongest candidate for the chosen objective.</p>
+<p>The Monte Carlo engine samples stock subsets and valid portfolios, then keeps the strongest candidate for the chosen objective.</p>
 <h3 id="weight-generation" tabindex="-1"><a class="header-anchor" href="#weight-generation">Weight generation</a></h3>
 <p>If positive random values $u_i$ are drawn, the app constructs valid weights by normalization:</p>
 <p>$$
@@ -305,12 +305,15 @@ $$</p>
 <h3 id="optimization-logic" tabindex="-1"><a class="header-anchor" href="#optimization-logic">Optimization logic</a></h3>
 <p>The engine does this:</p>
 <ol>
-<li>generate random valid portfolios</li>
+<li>run the user-selected number of simulation passes</li>
+<li>in each pass, randomly select the chosen number of stocks from the S&amp;P 500 list</li>
+<li>for each objective on that stock subset, generate random valid portfolios</li>
 <li>compute return, volatility, and Sharpe for each portfolio</li>
 <li>compare those sampled portfolios under the chosen objective</li>
-<li>retain the best sampled candidate</li>
+<li>retain the best sampled candidate for that pass</li>
 </ol>
-<p>In the current dashboard implementation, each Monte Carlo pass evaluates 2,000 candidate weight sets.</p>
+<p>In the current dashboard implementation, each Monte Carlo objective search evaluates 2,000 candidate weight sets.</p>
+<p>The user separately controls how many Monte Carlo passes are run.</p>
 <h3 id="strengths" tabindex="-1"><a class="header-anchor" href="#strengths">Strengths</a></h3>
 <ul>
 <li>simple to implement</li>
@@ -326,7 +329,7 @@ $$</p>
 <hr>
 <h2 id="deterministic-approach" tabindex="-1"><a class="header-anchor" href="#deterministic-approach">Deterministic Approach</a></h2>
 <h3 id="core-idea-1" tabindex="-1"><a class="header-anchor" href="#core-idea-1">Core idea</a></h3>
-<p>The deterministic engine replaces random search with projected optimization over the same feasible portfolio set.</p>
+<p>The deterministic engine replaces random search with direct optimization over the same feasible portfolio set.</p>
 <h3 id="projection-framework" tabindex="-1"><a class="header-anchor" href="#projection-framework">Projection framework</a></h3>
 <p>Starting from a feasible portfolio $\mathbf{w}^{(k)}$, the optimizer takes an improving step and then projects the result back onto the simplex:</p>
 <p>$$
@@ -341,6 +344,7 @@ $$</p>
 <li>$\alpha_k$ is the step size</li>
 <li>$\Pi_{\Delta}$ projects back to a valid long-only, fully invested portfolio</li>
 </ul>
+<p>This projection framework is used for the unconstrained deterministic objectives.</p>
 <h3 id="objectives-used-in-the-dashboard" tabindex="-1"><a class="header-anchor" href="#objectives-used-in-the-dashboard">Objectives used in the dashboard</a></h3>
 <h4 id="true-min-variance" tabindex="-1"><a class="header-anchor" href="#true-min-variance">True Min Variance</a></h4>
 <p>$$
@@ -357,6 +361,7 @@ $$</p>
 \sqrt{\mathbf{w}^\top \boldsymbol{\Sigma} \mathbf{w}} \le \sigma_{\max}
 $$</p>
 <p>This means the user chooses an annualized volatility cap and the optimizer finds the best risk-adjusted portfolio within that limit.</p>
+<p>In the current implementation, this capped portfolio is handled through a feasible constrained search path that only accepts portfolios satisfying the volatility cap.</p>
 <h3 id="strengths-1" tabindex="-1"><a class="header-anchor" href="#strengths-1">Strengths</a></h3>
 <ul>
 <li>faster and more stable for standard portfolio objectives</li>
@@ -366,13 +371,13 @@ $$</p>
 <h3 id="weaknesses-1" tabindex="-1"><a class="header-anchor" href="#weaknesses-1">Weaknesses</a></h3>
 <ul>
 <li>less flexible than Monte Carlo for ad hoc search rules</li>
-<li>still depends on the quality of the projected optimization routine</li>
+<li>still depends on the quality of the projected and feasible-search routines</li>
 <li>not a full industrial optimization stack or complete efficient-frontier solver</li>
 </ul>
 <hr>
 <h2 id="how-the-two-approaches-differ-in-practice" tabindex="-1"><a class="header-anchor" href="#how-the-two-approaches-differ-in-practice">How The Two Approaches Differ In Practice</a></h2>
 <p>Monte Carlo answers the problem by sampling many admissible portfolios and keeping the best sampled one.</p>
-<p>Deterministic optimization answers the problem by moving directly through the feasible region toward a better solution under the stated objective.</p>
+<p>Deterministic optimization answers the problem by moving directly through the feasible region toward a better solution under the stated objective, and by enforcing the cap explicitly for the capped Sharpe portfolio.</p>
 <p>In practical dashboard terms:</p>
 <ul>
 <li>Monte Carlo is more exploratory</li>
