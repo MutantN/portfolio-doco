@@ -249,23 +249,25 @@
         <p><strong>Author:</strong> Amadea Schaum<br>
 <strong>Date:</strong> March 2026</p>
 <h1 id="monte-carlo-engine-in-the-portfolio-dashboard" tabindex="-1"><a class="header-anchor" href="#monte-carlo-engine-in-the-portfolio-dashboard">Monte Carlo Engine In The Portfolio Dashboard</a></h1>
+<p>This page describes the Monte Carlo engine specifically, not the full dashboard optimization stack.</p>
 <h2 id="overview" tabindex="-1"><a class="header-anchor" href="#overview">Overview</a></h2>
-<p>The current production dashboard still uses Monte Carlo logic, but now it lives inside the app rather than in a separate Python workflow.</p>
+<p>The current production dashboard supports both a Monte Carlo engine and a deterministic engine.</p>
+<p>This page covers the Monte Carlo path only.</p>
 <p>In practice, that engine is used to:</p>
 <ul>
 <li>
 <p>sample candidate portfolio weights</p>
 </li>
 <li>
-<p>compare portfolio objectives</p>
+<p>compare portfolio objectives under random search</p>
 </li>
 <li>
-<p>surface interactive results in the UI</p>
+<p>provide a direct comparison path against the deterministic engine in the UI</p>
 </li>
 </ul>
 <hr>
 <h2 id="what-the-dashboard-compares" tabindex="-1"><a class="header-anchor" href="#what-the-dashboard-compares">What The Dashboard Compares</a></h2>
-<p>The dashboard focuses on three portfolio views:</p>
+<p>Within the Monte Carlo path, the dashboard focuses on three portfolio views:</p>
 <ul>
 <li>
 <p>Best Min Variance by Sharpe</p>
@@ -337,7 +339,7 @@
 <p>best candidate retained</p>
 </li>
 </ul>
-<p>This is a practical search approach that keeps the dashboard responsive enough for interactive use.</p>
+<p>This is a practical search approach that keeps the dashboard responsive enough for interactive use, even though it is less efficient than the deterministic optimizer for standard portfolio objectives.</p>
 <hr>
 <h2 id="what-you-see-in-the-results" tabindex="-1"><a class="header-anchor" href="#what-you-see-in-the-results">What You See In The Results</a></h2>
 <p>For each portfolio family the UI can summarize:</p>
@@ -379,7 +381,7 @@
 <h2 id="production-data-flow-around-the-monte-carlo-layer" tabindex="-1"><a class="header-anchor" href="#production-data-flow-around-the-monte-carlo-layer">Production Data Flow Around The Monte Carlo Layer</a></h2>
 <pre><code class="hljs language-text">Yahoo Finance history
     -&gt; daily returns
-    -&gt; annualized means / covariance
+    -&gt; selected expected return vector + historical covariance
     -&gt; Monte Carlo optimization
     -&gt; VaR analysis
 
@@ -424,6 +426,9 @@ Finnhub + FMP live data
 </li>
 <li>
 <p>in-app interactive simulation and comparison</p>
+</li>
+<li>
+<p>side-by-side engine comparison between Monte Carlo and deterministic optimization</p>
 </li>
 </ul>
 <hr>
