@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Monte Carlo Engine In The Portfolio Dashboard - Portfolio Dashboard Docs</title>
+  <title>Optimization Approaches / Methodology - Portfolio Dashboard Docs</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -242,17 +242,17 @@
       <nav class="nav">
         <h2>Documents</h2>
         <ul>
-          <li><a class="" href="00_project_overview.html">Portfolio Dashboard Project Overview</a></li><li><a class="" href="01_theory.html">Portfolio Dashboard Theory</a></li><li><a class="" href="02_quickstart.html">Portfolio Dashboard Quick Start</a></li><li><a class="" href="03_api_reference.html">Portfolio Dashboard API Reference</a></li><li><a class="active" href="04_monte_carlo.html">Monte Carlo Engine In The Portfolio Dashboard</a></li><li><a class="" href="README.html">Portfolio Dashboard Docs</a></li>
+          <li><a class="" href="00_project_overview.html">Portfolio Dashboard Project Overview</a></li><li><a class="" href="01_theory.html">Portfolio Dashboard Theory</a></li><li><a class="" href="02_quickstart.html">Portfolio Dashboard Quick Start</a></li><li><a class="" href="03_api_reference.html">Portfolio Dashboard API Reference</a></li><li><a class="active" href="04_monte_carlo.html">Optimization Approaches / Methodology</a></li><li><a class="" href="README.html">Portfolio Dashboard Docs</a></li>
         </ul>
       </nav>
       <article class="content">
         <p><strong>Author:</strong> Amadea Schaum<br>
 <strong>Date:</strong> March 2026</p>
-<h1 id="monte-carlo-engine-in-the-portfolio-dashboard" tabindex="-1"><a class="header-anchor" href="#monte-carlo-engine-in-the-portfolio-dashboard">Monte Carlo Engine In The Portfolio Dashboard</a></h1>
-<p>This page describes the Monte Carlo engine specifically, not the full dashboard optimization stack.</p>
+<h1 id="optimization-approaches-%2F-methodology" tabindex="-1"><a class="header-anchor" href="#optimization-approaches-%2F-methodology">Optimization Approaches / Methodology</a></h1>
+<p>This page explains the optimization methods used in the Portfolio Dashboard, with a specific focus on how Monte Carlo and deterministic approaches differ in the current production app.</p>
 <h2 id="overview" tabindex="-1"><a class="header-anchor" href="#overview">Overview</a></h2>
 <p>The current production dashboard supports both a Monte Carlo engine and a deterministic engine.</p>
-<p>This page covers the Monte Carlo path only.</p>
+<p>This page explains how the two approaches fit into the app, while still documenting the Monte Carlo path in detail.</p>
 <p>In practice, that engine is used to:</p>
 <ul>
 <li>
