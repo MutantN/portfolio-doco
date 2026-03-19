@@ -253,14 +253,15 @@
 <p>This page explains the logic behind the Portfolio Dashboard in plain language.</p>
 <p>The dashboard is trying to answer a simple question:</p>
 <ul>
-<li>given a portfolio objective, what stock mix and weight allocation best satisfies it?</li>
+<li>if you choose a set of stocks, what mix of weights looks most attractive under different portfolio goals?</li>
 </ul>
-<p>It answers that by:</p>
+<p>To do that, the app:</p>
 <ul>
-<li>estimating return and risk from market data</li>
-<li>generating many candidate portfolios</li>
-<li>scoring those portfolios against the chosen objective</li>
-<li>surfacing the strongest result for each portfolio view</li>
+<li>estimates return from market data</li>
+<li>measures how the chosen stocks move together</li>
+<li>generates many candidate portfolios</li>
+<li>scores those portfolios</li>
+<li>surfaces the most interesting ones in the UI</li>
 </ul>
 <hr>
 <h2 id="the-building-blocks" tabindex="-1"><a class="header-anchor" href="#the-building-blocks">The Building Blocks</a></h2>
