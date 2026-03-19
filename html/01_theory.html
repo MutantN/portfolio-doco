@@ -242,7 +242,7 @@
       <nav class="nav">
         <h2>Documents</h2>
         <ul>
-          <li><a class="" href="00_project_overview.html">Portfolio Dashboard Project Overview</a></li><li><a class="active" href="01_theory.html">Portfolio Objective And Theoretical Background</a></li><li><a class="" href="02_quickstart.html">Portfolio Dashboard Quick Start</a></li><li><a class="" href="03_api_reference.html">Portfolio Dashboard API Reference</a></li><li><a class="" href="04_monte_carlo.html">Optimization Approaches / Methodology</a></li><li><a class="" href="README.html">Portfolio Dashboard Docs</a></li>
+          <li><a class="" href="00_project_overview.html">Portfolio Dashboard Project Overview</a></li><li><a class="active" href="01_theory.html">Portfolio Objective And Theoretical Background</a></li><li><a class="" href="02_quickstart.html">Portfolio Dashboard Quick Start</a></li><li><a class="" href="03_api_reference.html">Portfolio Dashboard API Reference</a></li><li><a class="" href="04_monte_carlo.html">Optimization Method Considerations</a></li><li><a class="" href="README.html">Portfolio Dashboard Docs</a></li>
         </ul>
       </nav>
       <article class="content">
@@ -270,7 +270,7 @@
 <li>a weight for each stock</li>
 <li>an expected return for each stock</li>
 <li>a covariance matrix showing how stocks move together</li>
-<li>a fixed risk-free rate of <code>4%</code></li>
+<li>a user-selected annualized risk-free rate</li>
 </ul>
 <p>The portfolio rules are intentionally simple:</p>
 <ul>
@@ -298,7 +298,7 @@ $$</p>
 <p>Where:</p>
 <ul>
 <li>$R_p$ is portfolio return</li>
-<li>$R_f$ is the fixed <code>4%</code> risk-free rate</li>
+<li>$R_f$ is the user-selected annualized risk-free rate</li>
 <li>$\sigma_p$ is portfolio volatility</li>
 </ul>
 <p>Higher Sharpe means better return for the amount of risk taken.</p>
@@ -387,7 +387,6 @@ $$</p>
 <p>$$
 \Delta = { \mathbf{w} \in \mathbb{R}^n \mid w_i \ge 0,; \sum_{i=1}^{n} w_i = 1 }
 $$</p>
-<p>This avoids the <code>\left</code> delimiter issue and states the same feasible set cleanly.</p>
 <h4 id="projected-optimization-idea" tabindex="-1"><a class="header-anchor" href="#projected-optimization-idea">Projected optimization idea</a></h4>
 <p>Starting from a feasible weight vector $\mathbf{w}^{(k)}$, the method takes an improving step and projects it back onto the simplex:</p>
 <p>$$
