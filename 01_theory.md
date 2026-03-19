@@ -14,8 +14,8 @@ The dashboard is trying to answer a simple question:
 It answers that by:
 
 - estimating return and risk from market data
-- solving the portfolio under either a Monte Carlo engine or a deterministic engine
-- scoring portfolios against the chosen objective
+- generating many candidate portfolios
+- scoring those portfolios against the chosen objective
 - surfacing the strongest result for each portfolio view
 
 ---
@@ -92,22 +92,22 @@ The dashboard focuses on three portfolio views.
 
 ### 1. Best Min Variance by Sharpe
 
-In deterministic mode, this is defined cleanly as:
+This is meant to represent the strongest risk-adjusted portfolio within the low-volatility part of the search results.
 
-- maximize Sharpe
-- subject to portfolio volatility staying below a user-set annualized threshold
+You can think of it as:
 
-In plain terms, the user chooses a volatility ceiling and the dashboard finds the best risk-adjusted portfolio that stays inside it.
+- stay in the safer part of the opportunity set
+- then choose the candidate with the better Sharpe profile inside that group
 
 ### 2. Best Max Sharpe
 
 This is the clearest best risk-adjusted return portfolio in the dashboard.
 
-It is the portfolio that gives the strongest Sharpe ratio under the selected engine.
+It is the portfolio that gives the strongest Sharpe ratio among the sampled candidates.
 
 ### 3. True Min Variance
 
-This is the absolute lowest-volatility portfolio under the long-only, fully invested constraints.
+This is the absolute lowest-volatility portfolio found by the search.
 
 It does not try to improve return once volatility has been minimized.
 
@@ -117,27 +117,25 @@ That makes it the most conservative portfolio view shown in the app.
 
 ## How The Optimization Method Works
 
-The dashboard now supports two optimization engines.
+The dashboard uses a Monte Carlo search heuristic.
 
-### Monte Carlo engine
+It does **not** run a classical deterministic optimizer in the live UI path.
 
-The Monte Carlo path generates many random candidate portfolios and scores them.
-
-It does this:
+Instead, it does this:
 
 1. generate many random candidate weight sets
 2. normalize each weight set so total allocation is 100%
 3. calculate return, volatility, and Sharpe for each candidate
 4. keep the strongest candidates for the relevant portfolio objective
 
-In the current implementation, each Monte Carlo optimization pass evaluates 2,000 candidate weight sets.
+In the current implementation, each optimization pass evaluates 2,000 candidate weight sets.
 
-#### Random weight generation
+### Random weight generation
 
 If random positive values $u_i$ are drawn, the app converts them to valid weights like this:
 
 $$
-w_i = rac{u_i}{\sum_{j=1}^{n} u_j}
+w_i = \frac{u_i}{\sum_{j=1}^{n} u_j}
 $$
 
 That guarantees:
@@ -145,24 +143,7 @@ That guarantees:
 - every weight stays non-negative
 - all weights sum to 1
 
-### Deterministic engine
-
-The deterministic path replaces random search with projected optimization under the same long-only, fully invested constraints.
-
-It is used for:
-
-- True Min Variance
-- Best Max Sharpe
-- Best Min Variance by Sharpe with a volatility cap
-
-Conceptually, the deterministic engine works by:
-
-1. starting from a valid weight vector
-2. moving weights in the direction that improves the objective
-3. projecting the weights back onto the feasible simplex
-4. repeating until the solution stabilizes
-
-This gives a faster and more stable comparison path than pure random sampling, while preserving the same portfolio constraints.
+This approach is practical for an interactive dashboard because it is simple, fast, and easy to rerun.
 
 ---
 
