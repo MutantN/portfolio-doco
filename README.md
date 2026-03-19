@@ -1,26 +1,25 @@
-# Portfolio Dashboard Docs
+# Portfolio Doco
 
-This is the source project for the Portfolio Dashboard documentation site.
+Canonical local project for the Portfolio Dashboard HTML documentation.
 
-If you want to update the docs that appear at `portfolio-doco.vercel.app` or `as-hobby-labs.com/portfolio-dashboard-docs`, this is the folder to edit.
+## Purpose
 
-## What Lives Here
+This folder is the maintained source for the `portfolio-doco` Vercel project.
+It contains:
 
-- the Markdown source files
+- Markdown source files
 - the HTML renderer
-- the generated HTML output in `html/`
+- generated HTML output in `html/`
 
 ## Production Mapping
 
 - Local folder: `/Users/A/portfolio-doco`
-- GitHub repo: `MutantN/portfolio-doco`
 - Vercel project: `portfolio-doco`
-- Docs URL: `https://portfolio-doco.vercel.app`
-- Custom-domain route: `https://as-hobby-labs.com/portfolio-dashboard-docs/`
+- Production URL: `https://portfolio-doco.vercel.app`
+- Subject app: `portfolio-dashboard`
 
-## Typical Update Flow
+## Update Flow
 
-1. Edit the Markdown files.
-2. Rebuild the HTML with `python3 render_docs.py --input . --output html`.
-3. Commit and push the changes.
-4. Deploy with Vercel if you want the update to go live immediately.
+1. Edit the Markdown files in this folder.
+2. Regenerate HTML with `python3 render_docs.py --input . --output html`.
+3. Deploy with Vercel or push to GitHub.

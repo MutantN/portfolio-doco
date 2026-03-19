@@ -1,7 +1,5 @@
 .DS_Store
 .env.local
 .vercel
-node_modules
 __pycache__/
 *.pyc
-.env*.local

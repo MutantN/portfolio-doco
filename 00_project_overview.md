@@ -3,21 +3,15 @@
 
 # Portfolio Dashboard Project Overview
 
-## What This Dashboard Is
+## Executive Summary
 
-Portfolio Dashboard is a live web app for exploring portfolio ideas, comparing a few portfolio construction styles, and layering current market context on top of historical analysis.
+`portfolio-dashboard` is now a **production React + Vite dashboard** for portfolio analytics, not a standalone Python batch optimizer. The app combines:
 
-The production version is a dashboard that brings together:
-
-1. historical price history from Yahoo Finance
-
-2. live prices from Finnhub
-
-3. analyst targets and ratings from Financial Modeling Prep
-
-4. Monte Carlo portfolio search
-
-5. on-screen portfolio comparison and risk views
+1. Historical market data from Yahoo Finance
+2. Live quote data from Finnhub
+3. Analyst target and rating data from Financial Modeling Prep
+4. Monte Carlo portfolio search with long-only weights
+5. Dashboard presentation for allocation, performance, and risk review
 
 Production deployment is live at:
 
@@ -39,25 +33,18 @@ Production deployment is live at:
 
 ---
 
-## What You Can Do In It
+## Current Product Scope
 
-The current production dashboard supports:
+The dashboard supports:
 
-A. Monte Carlo portfolio simulation across a chosen stock set
-
-B. Comparison of **Best Min Variance by Sharpe**, **Best Max Sharpe**, and **True Min Variance** portfolios
-
-C. Historical and parametric VaR analysis
-
-D. Live quote overlays
-
-E. Analyst target price and rating overlays
-
-F. Production-safe deployment on both:
-
-- its own Vercel project domain
-
-- the routed path `as-hobby-labs.com/portfolio-dashboard/`
+- Monte Carlo portfolio simulation across a chosen stock set
+- Comparison of **Best Min Variance by Sharpe**, **Best Max Sharpe**, and **True Min Variance** portfolios
+- Historical and parametric VaR analysis
+- Live quote overlays
+- Analyst target-price and rating overlays
+- Production-safe deployment on both:
+  - its own Vercel project domain
+  - the routed path `as-hobby-labs.com/portfolio-dashboard/`
 
 ---
 
@@ -86,57 +73,40 @@ F. Production-safe deployment on both:
 
 ---
 
-## How The App Works
+## Key Runtime Features
 
-### Historical market data
+### Historical data path
 
 - Endpoint: `/api/yahoo-chart`
-
-- Purpose: fetch adjusted historical prices and turn them into return series
-
+- Purpose: fetch adjusted historical prices and build return series
 - Used for:
-
   - mean return estimation
-
   - covariance estimation
-
   - Monte Carlo simulation inputs
-
   - historical VaR proxy
 
-### Live market overlays
+### Live data path
 
 - Endpoint: `/api/quotes`
-
 - Finnhub provides:
-
   - live prices
-
   - previous close
-
 - Financial Modeling Prep provides:
-
   - target price
-
   - analyst count
-
   - analyst rating
 
-### Risk model
+### Risk engine
 
 - Fixed risk-free rate: `4%`
-
-- Weight constraints: long-only and fully invested
-
+- Weight constraints: long-only, fully invested
 - VaR methods:
-
   - historical rolling-loss proxy
-
   - parametric normal approximation
 
 ---
 
-## Deployment Notes
+## Production Notes
 
 - `vite.config.js` uses `base: "./"` so assets resolve correctly under the custom routed path
 - `vercel.json` explicitly configures:

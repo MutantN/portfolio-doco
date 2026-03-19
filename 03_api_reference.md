@@ -3,11 +3,11 @@
 
 # Portfolio Dashboard API Reference
 
-This page is the practical reference for the data endpoints and helper pieces behind the Portfolio Dashboard.
+This project is now a deployed React dashboard with lightweight serverless and dev-middleware endpoints.
 
 ---
 
-## Main Moving Parts
+## Project-Level Interfaces
 
 | Interface | File | Purpose |
 |-----------|------|---------|
@@ -38,9 +38,9 @@ Location:
 Purpose:
 
 - builds API URLs from `import.meta.env.BASE_URL`
-- keeps requests working both:
-  - on the standalone Vercel deployment
-  - under `/portfolio-dashboard/` on the main domain
+- allows the app to work both:
+  - on its standalone Vercel domain
+  - under `/portfolio-dashboard/`
 
 ---
 
@@ -69,7 +69,7 @@ Purpose:
 ### Purpose
 
 - fetches historical chart data from Yahoo Finance
-- returns the raw data used to build return series and portfolio risk inputs
+- returns raw JSON used to build return series and risk inputs
 
 ---
 
@@ -92,7 +92,7 @@ Purpose:
 ### Purpose
 
 - aggregates live quote and analyst context
-- returns merged data from:
+- returns data merged from:
   - Finnhub
   - Financial Modeling Prep
 
@@ -123,11 +123,11 @@ Purpose:
 
 ## Core Portfolio Functions
 
-The main portfolio logic still lives in `src/App.jsx`.
+The current app logic lives in `src/App.jsx`.
 
 ### `historicalVaRProxy(dailyReturns, weights)`
 
-- computes a worst realized rolling-loss proxy from historical returns
+- computes a worst realized rolling loss proxy from historical returns
 
 ### `parametricVaR(dailyReturns, weights, oneInYears=2)`
 
@@ -135,13 +135,13 @@ The main portfolio logic still lives in `src/App.jsx`.
 
 ### `optimize(mu, cv, seed, mode)`
 
-- runs a Monte Carlo-style search over random long-only weights
+- Monte Carlo search over random long-only weights
 - returns the best portfolio under the requested objective
 
 ### `runSim(...)`
 
-- runs one simulation pass over the selected stocks
-- produces the portfolio statistics used in the dashboard views
+- runs a simulation instance over selected stocks
+- produces portfolio statistics for the reported portfolio variants
 
 ---
 
