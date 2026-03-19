@@ -5,9 +5,9 @@
 
 ## Overview
 
-The current production dashboard still uses Monte Carlo logic, but it is now embedded inside a React application instead of a standalone Python script.
+The current production dashboard still uses Monte Carlo logic, but now it lives inside the app rather than in a separate Python workflow.
 
-The engine is used to:
+In practice, that engine is used to:
 
 - sample candidate portfolio weights
 - compare portfolio objectives
@@ -15,9 +15,9 @@ The engine is used to:
 
 ---
 
-## Current Portfolio Variants
+## What The Dashboard Compares
 
-The dashboard reports and compares:
+The dashboard focuses on three portfolio views:
 
 - Best Min Variance by Sharpe
 - Best Max Sharpe
@@ -32,7 +32,7 @@ Each variant is evaluated using:
 
 ---
 
-## Simulation Model
+## How The Simulation Works
 
 ### Inputs
 
@@ -53,11 +53,11 @@ Each variant is evaluated using:
 - repeated scoring under the objective function
 - best candidate retained
 
-This is a practical search heuristic suitable for interactive dashboard use.
+This is a practical search approach that keeps the dashboard responsive enough for interactive use.
 
 ---
 
-## Statistical Outputs Shown In The Dashboard
+## What You See In The Results
 
 For each portfolio family the UI can summarize:
 
@@ -70,11 +70,11 @@ For each portfolio family the UI can summarize:
 - average VaR loss
 - worst VaR loss
 
-The dashboard also highlights best-performing candidate portfolios and presents allocation breakdowns.
+The dashboard also highlights the strongest candidate portfolios and shows their allocations.
 
 ---
 
-## VaR Integration
+## How VaR Fits In
 
 ### Historical VaR proxy
 
@@ -84,7 +84,7 @@ Uses realized portfolio return history and finds the worst rolling-window loss o
 
 Uses annualized mean and annualized volatility under a normal approximation.
 
-The dashboard lets the user switch between these methods to compare risk interpretation styles.
+The dashboard lets you switch between these methods depending on whether you want the more intuitive historical view or the smoother model-based one.
 
 ---
 
@@ -104,7 +104,7 @@ Finnhub + FMP live data
 
 ---
 
-## Differences From The Original Documentation Set
+## What Changed From The Older Version
 
 The older documentation described:
 
@@ -135,7 +135,7 @@ The current production model is:
 
 ---
 
-## Recommended Documentation Maintenance
+## When To Update This Page
 
 If the dashboard changes materially, update this document when any of the following change:
 

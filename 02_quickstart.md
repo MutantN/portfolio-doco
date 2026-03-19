@@ -3,7 +3,7 @@
 
 # Portfolio Dashboard Quick Start
 
-This quick start reflects the **current production React dashboard** in `/Users/A/portfolio-dashboard`.
+This quick start is for the current production Portfolio Dashboard app in `/Users/A/portfolio-dashboard`.
 
 ---
 
@@ -18,20 +18,20 @@ This quick start reflects the **current production React dashboard** in `/Users/
 
 ---
 
-## Prerequisites
+## Before You Start
 
 - Node.js
 - npm
 - Vercel CLI if you want to deploy manually
 
-Optional for local live-data behavior:
+If you want live quotes and analyst overlays locally, you will also need:
 
 - `FINNHUB_API_KEY`
 - `FMP_API_KEY`
 
 ---
 
-## Install
+## Install Dependencies
 
 ```bash
 cd /Users/A/portfolio-dashboard
@@ -40,28 +40,28 @@ npm install
 
 ---
 
-## Run Locally
+## Run It Locally
 
 ```bash
 cd /Users/A/portfolio-dashboard
 npm run dev
 ```
 
-This starts the Vite app and the dev middleware in `vite.config.js`, including:
+This starts the app and the local API middleware defined in `vite.config.js`, including:
 
 - `/api/yahoo-chart`
 - `/api/quotes`
 
 ---
 
-## Build For Production
+## Build The Production Version
 
 ```bash
 cd /Users/A/portfolio-dashboard
 npm run build
 ```
 
-Expected output:
+You should get:
 
 - static app in `dist/`
 - relative asset paths suitable for:
@@ -70,7 +70,7 @@ Expected output:
 
 ---
 
-## Verify Live Production
+## Check The Live Version
 
 ### Main domain route
 
@@ -116,7 +116,7 @@ These can live in:
 
 ---
 
-## Core Files
+## Files You Will Most Likely Touch
 
 | File | Purpose |
 |------|---------|
@@ -129,7 +129,7 @@ These can live in:
 
 ## Common Maintenance Tasks
 
-### Update production documentation
+### Update the docs
 
 Edit:
 
@@ -137,7 +137,7 @@ Edit:
 - `portfolio-doco/README.md`
 - this documentation set
 
-### Check deployment-safe asset behavior
+### Check path-safe asset behavior
 
 Confirm `vite.config.js` still uses:
 
@@ -145,7 +145,7 @@ Confirm `vite.config.js` still uses:
 base: "./"
 ```
 
-### Re-deploy
+### Deploy an update
 
 Git-connected deployment:
 

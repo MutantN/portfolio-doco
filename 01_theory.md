@@ -3,9 +3,23 @@
 
 # Portfolio Dashboard Theory
 
-## Problem Framing
+## The Big Idea
 
-The production dashboard models a long-only portfolio over a selected stock universe. It estimates annualized returns and covariance from historical data, searches for candidate portfolios with Monte Carlo weight generation, and reports risk and performance measures for multiple portfolio objectives.
+The dashboard takes a set of stocks, learns from their historical return patterns, and then looks for portfolio weight mixes that suit different goals.
+
+In plain terms:
+
+- it estimates expected return from historical data
+
+- it can also estimate modeled returns from analyst target upside
+
+- it estimates how the stocks move together
+
+- it samples many candidate portfolios
+
+- it keeps the portfolios that best fit each objective
+
+- it reports return, volatility, Sharpe ratio, and VaR-style risk summaries
 
 ---
 
@@ -17,14 +31,15 @@ The production dashboard models a long-only portfolio over a selected stock univ
 - $\boldsymbol{\Sigma}$ = annualized covariance matrix
 - $R_f = 0.04$ = fixed annual risk-free rate in the current production app
 
-Constraints in production:
+The current production app keeps the rules simple:
 
 - $w_i \ge 0$
+
 - $\sum_i w_i = 1$
 
 ---
 
-## Portfolio Statistics
+## The Core Numbers
 
 ### Expected Return
 
@@ -44,13 +59,15 @@ $$
 \text{Sharpe} = \frac{R_p - R_f}{\sigma_p}
 $$
 
-The dashboard uses this exact fixed-rate Sharpe formulation to score simulated portfolios.
+The dashboard uses this fixed-rate Sharpe formula when it ranks portfolios.
 
 ---
 
-## Portfolio Objectives
+## The Three Main Portfolio Views
 
 ### Best Min Variance by Sharpe
+
+This is the lowest-volatility family of portfolios filtered for the strongest Sharpe outcome inside that group.
 
 $$
 \min_{\mathbf{w}} \mathbf{w}^\top \boldsymbol{\Sigma} \mathbf{w}
@@ -58,21 +75,43 @@ $$
 
 ### Best Max Sharpe
 
+This is the dashboard's strongest risk-adjusted portfolio.
+
 $$
 \max_{\mathbf{w}} \frac{\mathbf{w}^\top \boldsymbol{\mu} - R_f}{\sqrt{\mathbf{w}^\top \boldsymbol{\Sigma} \mathbf{w}}}
 $$
 
 ### True Min Variance
 
+This is the absolute lowest-volatility portfolio the search keeps, even if its return is less attractive.
+
 $$
-\max_{\mathbf{w}} \mathbf{w}^\top \boldsymbol{\mu}
+\min_{\mathbf{w}} \mathbf{w}^\top \boldsymbol{\Sigma} \mathbf{w}
 $$
 
 ---
 
-## Monte Carlo Search
+## How The Search Works
 
-The production dashboard does **not** solve the weight problem with a deterministic quadratic optimizer. Instead, it samples many random long-only weights and retains the best portfolio for each objective.
+The production dashboard does **not** use a formal quadratic solver for the live UI path. Instead, it generates many random long-only weight sets and keeps the best candidates for each objective.
+
+## Optimization Method
+
+The dashboard uses a Monte Carlo search heuristic.
+
+In practice, that means:
+
+- it generates many random long-only weight sets
+
+- each weight set is normalized so total allocation sums to 1
+
+- each candidate portfolio is scored using return, volatility, and Sharpe ratio
+
+- the dashboard keeps the strongest candidate for the relevant objective
+
+- the search runs repeatedly with seeded randomness so the same simulation can be reproduced
+
+The current implementation samples 2,000 candidate weight sets per optimization pass.
 
 ### Random weight generation
 
@@ -82,14 +121,15 @@ $$
 w_i = \frac{u_i}{\sum_{j=1}^{n} u_j}
 $$
 
-This guarantees:
+That guarantees:
 
 - all weights are non-negative
+
 - total allocation sums to 1
 
 ---
 
-## Historical Return and Covariance Estimation
+## How Historical Data Becomes Portfolio Inputs
 
 The app builds daily returns from Yahoo Finance price history and annualizes them using a 252-trading-day convention.
 
@@ -107,15 +147,47 @@ $$
 
 ---
 
-## VaR Methods In Production
+## How Modeled Returns Work
+
+The dashboard also supports a modeled return mode.
+
+Instead of relying only on historical annualized mean returns, it can blend:
+
+- target-implied return from analyst targets
+
+- historical annualized mean return
+
+The target-implied return is conceptually:
+
+$$
+\text{implied return} = \frac{\text{target price}}{\text{current price}} - 1
+$$
+
+That implied return is then blended with the historical mean.
+
+The blend weight increases with analyst confidence, which is proxied by analyst count.
+
+In practical terms:
+
+- more analyst coverage gives more weight to the modeled return
+
+- less analyst coverage leaves more weight on the historical mean
+
+- covariance remains historical even when returns are modeled
+
+So the modeled mode changes the expected return vector, but not the covariance matrix.
+
+---
+
+## How Risk Is Presented
 
 ### Historical VaR proxy
 
-The app computes a worst realized rolling loss proxy from the selected lookback window.
+This is the more intuitive setting. It looks back through realized history and asks, “what was the worst rolling loss over this period?”
 
 ### Parametric VaR
 
-The app also supports a normal-approximation annual VaR.
+The app also supports a smoother, model-based normal approximation.
 
 $$
 \text{VaR} = \mu_{\text{annual}} + z_p \sigma_{\text{annual}}
@@ -125,25 +197,32 @@ where the left-tail probability is interpreted as `1 / N years`.
 
 ---
 
-## Live Overlay Theory
+## Where Live Data Fits In
 
-The optimization engine remains historical/covariance driven, but the dashboard enriches the results with live market context:
+The optimization engine is still driven by historical returns and covariance, but the dashboard adds live market context on top:
 
 - Finnhub quote data for latest price
+
 - FMP analyst target consensus and rating data
 
-These live fields do not replace the covariance engine; they augment the dashboard’s explanatory layer.
+These fields do not replace the optimization model. They help explain what the simulated portfolios look like in the market right now.
 
 ---
 
-## Production Caveats
+## Important Limits
 
 - no shorting
+
 - no leverage
+
 - no transaction costs
+
 - no taxes
+
 - no slippage
+
 - no liquidity modeling
+
 - no deterministic frontier solver
 
-The dashboard is an interactive analytical tool, not an execution engine.
+This is an exploratory portfolio analysis tool, not an order management or execution system.
