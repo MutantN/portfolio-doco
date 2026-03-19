@@ -10,9 +10,7 @@ The current production dashboard still uses Monte Carlo logic, but now it lives 
 In practice, that engine is used to:
 
 - sample candidate portfolio weights
-
 - compare portfolio objectives
-
 - surface interactive results in the UI
 
 ---
@@ -22,19 +20,14 @@ In practice, that engine is used to:
 The dashboard focuses on three portfolio views:
 
 - Best Min Variance by Sharpe
-
 - Best Max Sharpe
-
 - True Min Variance
 
 Each variant is evaluated using:
 
 - annualized return
-
 - annualized volatility
-
 - Sharpe ratio
-
 - selected VaR method
 
 ---
@@ -44,27 +37,20 @@ Each variant is evaluated using:
 ### Inputs
 
 - selected stock tickers
-
 - historical return matrix from Yahoo Finance
-
 - annualized mean returns
-
 - annualized covariance matrix
-
 - user-selected VaR method
 
 ### Constraints
 
 - long-only weights
-
 - fully invested portfolio
 
 ### Search approach
 
 - pseudo-random weight generation
-
 - repeated scoring under the objective function
-
 - best candidate retained
 
 This is a practical search approach that keeps the dashboard responsive enough for interactive use.
@@ -76,19 +62,12 @@ This is a practical search approach that keeps the dashboard responsive enough f
 For each portfolio family the UI can summarize:
 
 - average return
-
 - return dispersion
-
 - average volatility
-
 - volatility dispersion
-
 - average Sharpe
-
 - Sharpe dispersion
-
 - average VaR loss
-
 - worst VaR loss
 
 The dashboard also highlights the strongest candidate portfolios and shows their allocations.
@@ -130,13 +109,9 @@ Finnhub + FMP live data
 The older documentation described:
 
 - a Python CLI workflow
-
 - multiprocessing jobs
-
 - CSV outputs
-
 - checkpoint files
-
 - standalone simulation scripts
 
 That is no longer the production model for `portfolio-dashboard`.
@@ -144,13 +119,9 @@ That is no longer the production model for `portfolio-dashboard`.
 The current production model is:
 
 - React frontend
-
 - Vite build
-
 - Vercel deployment
-
 - server-backed market-data endpoints
-
 - in-app interactive simulation and comparison
 
 ---
@@ -158,11 +129,8 @@ The current production model is:
 ## Operational Notes
 
 - Monte Carlo behavior is implemented inside `src/App.jsx`
-
 - dev and preview API behavior is implemented in `vite.config.js`
-
 - production chart fetching is handled by `api/yahoo-chart.js`
-
 - deployment config is controlled through `vercel.json`
 
 ---
@@ -172,11 +140,7 @@ The current production model is:
 If the dashboard changes materially, update this document when any of the following change:
 
 - optimization objectives
-
 - risk-free rate
-
 - VaR implementation
-
 - upstream data providers
-
 - deployment path or environment model

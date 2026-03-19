@@ -38,11 +38,8 @@ Location:
 Purpose:
 
 - builds API URLs from `import.meta.env.BASE_URL`
-
 - keeps requests working both:
-
   - on the standalone Vercel deployment
-
   - under `/portfolio-dashboard/` on the main domain
 
 ---
@@ -72,7 +69,6 @@ Purpose:
 ### Purpose
 
 - fetches historical chart data from Yahoo Finance
-
 - returns the raw data used to build return series and portfolio risk inputs
 
 ---
@@ -96,11 +92,8 @@ Purpose:
 ### Purpose
 
 - aggregates live quote and analyst context
-
 - returns merged data from:
-
   - Finnhub
-
   - Financial Modeling Prep
 
 ### Response shape
@@ -143,13 +136,11 @@ The main portfolio logic still lives in `src/App.jsx`.
 ### `optimize(mu, cv, seed, mode)`
 
 - runs a Monte Carlo-style search over random long-only weights
-
 - returns the best portfolio under the requested objective
 
 ### `runSim(...)`
 
 - runs one simulation pass over the selected stocks
-
 - produces the portfolio statistics used in the dashboard views
 
 ---
@@ -163,11 +154,8 @@ The main portfolio logic still lives in `src/App.jsx`.
 ### Vercel
 
 - framework: `vite`
-
 - build command: `npm run build`
-
 - output directory: `dist`
-
 - non-file routes rewrite to `index.html`
 
 ---
@@ -175,7 +163,5 @@ The main portfolio logic still lives in `src/App.jsx`.
 ## Operational Notes
 
 - The dashboard is Git-connected to `MutantN/portfolio-dashboard`
-
 - Production deployment is triggered from Git pushes or manual `vercel --prod`
-
 - Routed custom-domain access is provided through `as-hobby-home`

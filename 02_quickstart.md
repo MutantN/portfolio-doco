@@ -21,15 +21,12 @@ This quick start is for the current production Portfolio Dashboard app in `/User
 ## Before You Start
 
 - Node.js
-
 - npm
-
 - Vercel CLI if you want to deploy manually
 
 If you want live quotes and analyst overlays locally, you will also need:
 
 - `FINNHUB_API_KEY`
-
 - `FMP_API_KEY`
 
 ---
@@ -53,7 +50,6 @@ npm run dev
 This starts the app and the local API middleware defined in `vite.config.js`, including:
 
 - `/api/yahoo-chart`
-
 - `/api/quotes`
 
 ---
@@ -68,11 +64,8 @@ npm run build
 You should get:
 
 - static app in `dist/`
-
 - relative asset paths suitable for:
-
   - standalone Vercel hosting
-
   - routed deployment at `/portfolio-dashboard/`
 
 ---
@@ -119,7 +112,6 @@ FMP_API_KEY
 These can live in:
 
 - local `.env.local`
-
 - Vercel project environment variables
 
 ---
@@ -142,9 +134,7 @@ These can live in:
 Edit:
 
 - `README.md`
-
 - `portfolio-doco/README.md`
-
 - this documentation set
 
 ### Check path-safe asset behavior

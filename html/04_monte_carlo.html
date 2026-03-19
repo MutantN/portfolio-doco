@@ -242,7 +242,7 @@
       <nav class="nav">
         <h2>Documents</h2>
         <ul>
-          <li><a class="" href="00_project_overview.html">Portfolio Dashboard Project Overview</a></li><li><a class="" href="01_theory.html">Portfolio Dashboard Theory</a></li><li><a class="" href="02_quickstart.html">Portfolio Dashboard Quick Start</a></li><li><a class="" href="03_api_reference.html">Portfolio Dashboard API Reference</a></li><li><a class="active" href="04_monte_carlo.html">Monte Carlo Engine In The Portfolio Dashboard</a></li><li><a class="" href="README.html">Portfolio Dashboard Docs</a></li>
+          <li><a class="" href="00_project_overview.md">Portfolio Dashboard Project Overview</a></li><li><a class="" href="01_theory.md">Portfolio Dashboard Theory</a></li><li><a class="" href="02_quickstart.md">Portfolio Dashboard Quick Start</a></li><li><a class="" href="03_api_reference.md">Portfolio Dashboard API Reference</a></li><li><a class="active" href="04_monte_carlo.md">Monte Carlo Engine In The Portfolio Dashboard</a></li><li><a class="" href="README.md">Portfolio Dashboard Docs</a></li>
         </ul>
       </nav>
       <article class="content">
@@ -253,115 +253,59 @@
 <p>The current production dashboard still uses Monte Carlo logic, but now it lives inside the app rather than in a separate Python workflow.</p>
 <p>In practice, that engine is used to:</p>
 <ul>
-<li>
-<p>sample candidate portfolio weights</p>
-</li>
-<li>
-<p>compare portfolio objectives</p>
-</li>
-<li>
-<p>surface interactive results in the UI</p>
-</li>
+<li>sample candidate portfolio weights</li>
+<li>compare portfolio objectives</li>
+<li>surface interactive results in the UI</li>
 </ul>
 <hr>
 <h2 id="what-the-dashboard-compares" tabindex="-1"><a class="header-anchor" href="#what-the-dashboard-compares">What The Dashboard Compares</a></h2>
 <p>The dashboard focuses on three portfolio views:</p>
 <ul>
-<li>
-<p>Best Min Variance by Sharpe</p>
-</li>
-<li>
-<p>Best Max Sharpe</p>
-</li>
-<li>
-<p>True Min Variance</p>
-</li>
+<li>Best Min Variance by Sharpe</li>
+<li>Best Max Sharpe</li>
+<li>True Min Variance</li>
 </ul>
 <p>Each variant is evaluated using:</p>
 <ul>
-<li>
-<p>annualized return</p>
-</li>
-<li>
-<p>annualized volatility</p>
-</li>
-<li>
-<p>Sharpe ratio</p>
-</li>
-<li>
-<p>selected VaR method</p>
-</li>
+<li>annualized return</li>
+<li>annualized volatility</li>
+<li>Sharpe ratio</li>
+<li>selected VaR method</li>
 </ul>
 <hr>
 <h2 id="how-the-simulation-works" tabindex="-1"><a class="header-anchor" href="#how-the-simulation-works">How The Simulation Works</a></h2>
 <h3 id="inputs" tabindex="-1"><a class="header-anchor" href="#inputs">Inputs</a></h3>
 <ul>
-<li>
-<p>selected stock tickers</p>
-</li>
-<li>
-<p>historical return matrix from Yahoo Finance</p>
-</li>
-<li>
-<p>annualized mean returns</p>
-</li>
-<li>
-<p>annualized covariance matrix</p>
-</li>
-<li>
-<p>user-selected VaR method</p>
-</li>
+<li>selected stock tickers</li>
+<li>historical return matrix from Yahoo Finance</li>
+<li>annualized mean returns</li>
+<li>annualized covariance matrix</li>
+<li>user-selected VaR method</li>
 </ul>
 <h3 id="constraints" tabindex="-1"><a class="header-anchor" href="#constraints">Constraints</a></h3>
 <ul>
-<li>
-<p>long-only weights</p>
-</li>
-<li>
-<p>fully invested portfolio</p>
-</li>
+<li>long-only weights</li>
+<li>fully invested portfolio</li>
 </ul>
 <h3 id="search-approach" tabindex="-1"><a class="header-anchor" href="#search-approach">Search approach</a></h3>
 <ul>
-<li>
-<p>pseudo-random weight generation</p>
-</li>
-<li>
-<p>repeated scoring under the objective function</p>
-</li>
-<li>
-<p>best candidate retained</p>
-</li>
+<li>pseudo-random weight generation</li>
+<li>repeated scoring under the objective function</li>
+<li>best candidate retained</li>
 </ul>
 <p>This is a practical search approach that keeps the dashboard responsive enough for interactive use.</p>
 <hr>
 <h2 id="what-you-see-in-the-results" tabindex="-1"><a class="header-anchor" href="#what-you-see-in-the-results">What You See In The Results</a></h2>
 <p>For each portfolio family the UI can summarize:</p>
 <ul>
-<li>
-<p>average return</p>
-</li>
-<li>
-<p>return dispersion</p>
-</li>
-<li>
-<p>average volatility</p>
-</li>
-<li>
-<p>volatility dispersion</p>
-</li>
-<li>
-<p>average Sharpe</p>
-</li>
-<li>
-<p>Sharpe dispersion</p>
-</li>
-<li>
-<p>average VaR loss</p>
-</li>
-<li>
-<p>worst VaR loss</p>
-</li>
+<li>average return</li>
+<li>return dispersion</li>
+<li>average volatility</li>
+<li>volatility dispersion</li>
+<li>average Sharpe</li>
+<li>Sharpe dispersion</li>
+<li>average VaR loss</li>
+<li>worst VaR loss</li>
 </ul>
 <p>The dashboard also highlights the strongest candidate portfolios and shows their allocations.</p>
 <hr>
@@ -387,76 +331,38 @@ Finnhub + FMP live data
 <h2 id="what-changed-from-the-older-version" tabindex="-1"><a class="header-anchor" href="#what-changed-from-the-older-version">What Changed From The Older Version</a></h2>
 <p>The older documentation described:</p>
 <ul>
-<li>
-<p>a Python CLI workflow</p>
-</li>
-<li>
-<p>multiprocessing jobs</p>
-</li>
-<li>
-<p>CSV outputs</p>
-</li>
-<li>
-<p>checkpoint files</p>
-</li>
-<li>
-<p>standalone simulation scripts</p>
-</li>
+<li>a Python CLI workflow</li>
+<li>multiprocessing jobs</li>
+<li>CSV outputs</li>
+<li>checkpoint files</li>
+<li>standalone simulation scripts</li>
 </ul>
 <p>That is no longer the production model for <code>portfolio-dashboard</code>.</p>
 <p>The current production model is:</p>
 <ul>
-<li>
-<p>React frontend</p>
-</li>
-<li>
-<p>Vite build</p>
-</li>
-<li>
-<p>Vercel deployment</p>
-</li>
-<li>
-<p>server-backed market-data endpoints</p>
-</li>
-<li>
-<p>in-app interactive simulation and comparison</p>
-</li>
+<li>React frontend</li>
+<li>Vite build</li>
+<li>Vercel deployment</li>
+<li>server-backed market-data endpoints</li>
+<li>in-app interactive simulation and comparison</li>
 </ul>
 <hr>
 <h2 id="operational-notes" tabindex="-1"><a class="header-anchor" href="#operational-notes">Operational Notes</a></h2>
 <ul>
-<li>
-<p>Monte Carlo behavior is implemented inside <code>src/App.jsx</code></p>
-</li>
-<li>
-<p>dev and preview API behavior is implemented in <code>vite.config.js</code></p>
-</li>
-<li>
-<p>production chart fetching is handled by <code>api/yahoo-chart.js</code></p>
-</li>
-<li>
-<p>deployment config is controlled through <code>vercel.json</code></p>
-</li>
+<li>Monte Carlo behavior is implemented inside <code>src/App.jsx</code></li>
+<li>dev and preview API behavior is implemented in <code>vite.config.js</code></li>
+<li>production chart fetching is handled by <code>api/yahoo-chart.js</code></li>
+<li>deployment config is controlled through <code>vercel.json</code></li>
 </ul>
 <hr>
 <h2 id="when-to-update-this-page" tabindex="-1"><a class="header-anchor" href="#when-to-update-this-page">When To Update This Page</a></h2>
 <p>If the dashboard changes materially, update this document when any of the following change:</p>
 <ul>
-<li>
-<p>optimization objectives</p>
-</li>
-<li>
-<p>risk-free rate</p>
-</li>
-<li>
-<p>VaR implementation</p>
-</li>
-<li>
-<p>upstream data providers</p>
-</li>
-<li>
-<p>deployment path or environment model</p>
-</li>
+<li>optimization objectives</li>
+<li>risk-free rate</li>
+<li>VaR implementation</li>
+<li>upstream data providers</li>
+<li>deployment path or environment model</li>
 </ul>
 
         <div class="footer">Source project: <code>/Users/A/portfolio-doco</code></div>
