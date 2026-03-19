@@ -45,13 +45,11 @@ Each variant is evaluated using:
 
 - selected stock tickers
 
-- aligned historical daily return matrix from Yahoo Finance
+- historical return matrix from Yahoo Finance
 
-- expected return vector from the selected return mode
-  - historical annualized mean return
-  - or modeled return blending target-implied return with historical mean
+- annualized mean returns
 
-- annualized covariance matrix from historical returns
+- annualized covariance matrix
 
 - user-selected VaR method
 
