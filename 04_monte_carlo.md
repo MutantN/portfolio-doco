@@ -1,15 +1,15 @@
 **Author:** Amadea Schaum  
 **Date:** March 2026
 
-# Optimization Approaches / Methodology
+# Monte Carlo Engine In The Portfolio Dashboard
 
-This page explains the optimization methods used in the Portfolio Dashboard, with a specific focus on how Monte Carlo and deterministic approaches differ in the current production app.
+This page describes the Monte Carlo engine specifically, not the full dashboard optimization stack.
 
 ## Overview
 
 The current production dashboard supports both a Monte Carlo engine and a deterministic engine.
 
-This page explains how the two approaches fit into the app, while still documenting the Monte Carlo path in detail.
+This page covers the Monte Carlo path only.
 
 In practice, that engine is used to:
 
