@@ -322,7 +322,7 @@ async function main() {
   }
 
   const firstDoc = docs.find((doc) => doc.file === "00_project_overview.md") ?? docs[0];
-  const redirect = `<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=${firstDoc.file.replace(/\.md$/, ".html")}"></head><body></body></html>`;
+  const redirect = `<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=${firstDoc.file.replace(/\\.md$/, ".html")}"></head><body></body></html>`;
   await fs.writeFile(path.join(OUTPUT_DIR, "index.html"), redirect);
 
   console.log(`Rendered ${docs.length} documents to ${OUTPUT_DIR}`);
