@@ -244,11 +244,11 @@ The current sampled subset + QP design gives most of the practical improvement o
 
 ## How The Three Approaches Differ In Practice
 
-Monte Carlo answers the problem by sampling many admissible portfolios and keeping the best sampled one.
+Monte Carlo solves the problem by sampling many admissible portfolios and keeping the best sampled one.
 
-Sampled subset + deterministic QP answers the problem by sampling stock subsets, then solving a QP-backed efficient-frontier problem inside each subset and enforcing the cap explicitly at the frontier-selection step.
+Sampled subset + deterministic QP solves the problem by sampling stock subsets, then solving a QP-backed efficient-frontier problem inside each subset and enforcing the cap explicitly at the frontier-selection step.
 
-Mixed-integer optimization would answer the problem by jointly selecting the stocks and weights in one optimization model, rather than sampling subsets heuristically.
+Mixed-integer optimization would solve the problem by jointly selecting the stocks and weights in one optimization model, rather than sampling subsets heuristically.
 
 In practical dashboard terms:
 
