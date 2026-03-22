@@ -125,6 +125,7 @@ The deterministic path does this:
 
 So the current deterministic mode is:
 
+- the user chooses the number of sampled subsets
 - deterministic for weights inside each tested subset
 - sampled and heuristic for stock-universe selection
 
