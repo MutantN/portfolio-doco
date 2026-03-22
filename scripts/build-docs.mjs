@@ -195,18 +195,21 @@ const styles = `
     width: 100%;
     border-collapse: collapse;
     margin: 18px 0;
-    table-layout: fixed;
     display: block;
     overflow-x: auto;
+    min-width: 760px;
+    font-size: 0.9rem;
   }
 
   .content th,
   .content td {
-    padding: 12px 14px;
+    padding: 10px 12px;
     border: 1px solid var(--line);
     text-align: left;
     vertical-align: top;
-    overflow-wrap: anywhere;
+    white-space: normal;
+    word-break: normal;
+    hyphens: none;
   }
 
   .content th {
