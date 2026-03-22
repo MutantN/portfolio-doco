@@ -1,23 +1,28 @@
 **Author:** Amadea Schaum  
 **Date:** March 2026
 
-# Optimization Method Considerations
+# Optimization Method Comparison
 
-This page explains the optimization methods used in the Portfolio Dashboard and how Monte Carlo and deterministic approaches differ in the current production app.
+This page explains the optimization methods relevant to the Portfolio Dashboard and how Monte Carlo, sampled subset plus deterministic QP, and mixed-integer optimization compare.
 
 ## What This Page Covers
 
-The production dashboard supports two optimization engines:
+The production dashboard currently implements two engines:
 
 - Monte Carlo search
-- deterministic optimization
+- sampled subset plus deterministic QP search
+
+A third method is discussed for comparison:
+
+- mixed-integer optimization
 
 This page explains:
 
-- what each engine is trying to solve
-- how each engine works
-- where each engine is stronger or weaker
-- how both engines fit into the same dashboard
+- what each method is trying to solve
+- how the implemented engines work
+- why mixed-integer optimization is not currently implemented
+- where each method is stronger or weaker
+- how the current production choice fits the dashboard
 
 ---
 
@@ -186,17 +191,71 @@ In the current implementation, the capped portfolio is chosen from efficient-fro
 
 ---
 
-## How The Two Approaches Differ In Practice
+## Comparison Table
+
+| Method | What it optimizes | Accuracy | Efficiency in this app context | Repeatability | Main strength | Main limitation |
+|--------|--------------------|----------|-------------------------------|---------------|---------------|-----------------|
+| Monte Carlo | sampled stock subsets and sampled weights | lower | medium | medium with fixed seeds | simple and exploratory | weight search is noisy and wasteful |
+| Sampled subset + deterministic QP | sampled stock subsets, but deterministic weights inside each subset | medium to high | high | high | strong weight optimization with practical runtime | subset search is still heuristic |
+| Mixed-integer optimization | stock selection and weights jointly | highest | low | high | closest to a global optimum | much heavier computationally and operationally |
+
+## Why Mixed-Integer Optimization Is Not Implemented
+
+Mixed-integer optimization would model two decisions at once:
+
+1. which stocks are included
+2. what weights those included stocks receive
+
+That requires binary inclusion variables together with continuous portfolio weights. In theory, this is the cleanest way to solve the stock-selection problem jointly with the weight-allocation problem.
+
+It is not the current production choice for three practical reasons:
+
+### 1. Computational cost
+
+The dashboard works from a large S&P 500 candidate pool. Jointly selecting a fixed number of stocks from that pool is a combinatorial problem, which is much harder than solving a continuous quadratic program on one fixed subset.
+
+In practical terms:
+
+- sampled subset + QP scales with the number of subsets tested
+- mixed-integer optimization can branch over a very large stock-selection search space
+- runtime is much less predictable for an interactive browser app
+
+### 2. Frontend architecture fit
+
+The current app is a Vite React frontend with lightweight client-side optimization. Mixed-integer optimization is usually better suited to:
+
+- a backend optimization service
+- a dedicated commercial or industrial solver
+- longer-running jobs with explicit status handling
+
+That is a much heavier architecture than the current dashboard needs.
+
+### 3. Implementation complexity
+
+Mixed-integer optimization would add substantial complexity around:
+
+- binary decision variables for stock selection
+- cardinality constraints
+- solver tolerances and time limits
+- infeasibility handling
+- deployment and runtime packaging
+
+The current sampled subset + QP design gives most of the practical improvement over Monte Carlo without requiring that architecture jump.
+
+## How The Three Approaches Differ In Practice
 
 Monte Carlo answers the problem by sampling many admissible portfolios and keeping the best sampled one.
 
-Deterministic optimization answers the problem by sampling stock subsets, then solving a QP-backed efficient-frontier problem inside each subset and enforcing the cap explicitly at the frontier-selection step.
+Sampled subset + deterministic QP answers the problem by sampling stock subsets, then solving a QP-backed efficient-frontier problem inside each subset and enforcing the cap explicitly at the frontier-selection step.
+
+Mixed-integer optimization would answer the problem by jointly selecting the stocks and weights in one optimization model, rather than sampling subsets heuristically.
 
 In practical dashboard terms:
 
 - Monte Carlo is more exploratory
-- deterministic optimization is more efficient for standard objectives inside a tested subset
-- both use the same market data, return model, covariance model, and VaR options
+- sampled subset + deterministic QP is more efficient for standard objectives inside a tested subset
+- mixed-integer optimization is the most rigorous, but least practical for the current frontend setup
+- all three methods use the same market data, return model, covariance model, and VaR concepts
 
 ---
 
@@ -249,6 +308,7 @@ Update this page if any of the following change:
 
 - optimization objectives
 - deterministic optimization method
+- any decision around mixed-integer optimization or backend solvers
 - Monte Carlo sampling rule
 - risk-free rate
 - VaR implementation

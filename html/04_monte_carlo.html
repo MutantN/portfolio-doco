@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Optimization Method Considerations - Portfolio Optimization Documentation</title>
+    <title>Optimization Method Comparison - Portfolio Optimization Documentation</title>
     
     <!-- MathJax for LaTeX rendering -->
     <script>
@@ -294,23 +294,28 @@
         <strong>Author:</strong> Amadea Schaum  
 <strong>Date:</strong> March 2026
 
-<h1>Optimization Method Considerations</h1>
+<h1>Optimization Method Comparison</h1>
 
-<p>This page explains the optimization methods used in the Portfolio Dashboard and how Monte Carlo and deterministic approaches differ in the current production app.</p>
+<p>This page explains the optimization methods relevant to the Portfolio Dashboard and how Monte Carlo, sampled subset plus deterministic QP, and mixed-integer optimization compare.</p>
 
 <h2>What This Page Covers</h2>
 
-<p>The production dashboard supports two optimization engines:</p>
+<p>The production dashboard currently implements two engines:</p>
 
 <p>- Monte Carlo search
-- deterministic optimization</p>
+- sampled subset plus deterministic QP search</p>
+
+<p>A third method is discussed for comparison:</p>
+
+<p>- mixed-integer optimization</p>
 
 <p>This page explains:</p>
 
-<p>- what each engine is trying to solve
-- how each engine works
-- where each engine is stronger or weaker
-- how both engines fit into the same dashboard</p>
+<p>- what each method is trying to solve
+- how the implemented engines work
+- why mixed-integer optimization is not currently implemented
+- where each method is stronger or weaker
+- how the current production choice fits the dashboard</p>
 
 <hr>
 
@@ -479,17 +484,72 @@ $$
 
 <hr>
 
-<h2>How The Two Approaches Differ In Practice</h2>
+<h2>Comparison Table</h2>
+
+<table>
+<tr><th>Method</th><th>What it optimizes</th><th>Accuracy</th><th>Efficiency in this app context</th><th>Repeatability</th><th>Main strength</th><th>Main limitation</th></tr>
+<tr><td>Monte Carlo</td><td>sampled stock subsets and sampled weights</td><td>lower</td><td>medium</td><td>medium with fixed seeds</td><td>simple and exploratory</td><td>weight search is noisy and wasteful</td></tr>
+<tr><td>Sampled subset + deterministic QP</td><td>sampled stock subsets, but deterministic weights inside each subset</td><td>medium to high</td><td>high</td><td>high</td><td>strong weight optimization with practical runtime</td><td>subset search is still heuristic</td></tr>
+<tr><td>Mixed-integer optimization</td><td>stock selection and weights jointly</td><td>highest</td><td>low</td><td>high</td><td>closest to a global optimum</td><td>much heavier computationally and operationally</td></tr>
+</table>
+
+<h2>Why Mixed-Integer Optimization Is Not Implemented</h2>
+
+<p>Mixed-integer optimization would model two decisions at once:</p>
+
+<p>1. which stocks are included
+2. what weights those included stocks receive</p>
+
+<p>That requires binary inclusion variables together with continuous portfolio weights. In theory, this is the cleanest way to solve the stock-selection problem jointly with the weight-allocation problem.</p>
+
+<p>It is not the current production choice for three practical reasons:</p>
+
+<h3>1. Computational cost</h3>
+
+<p>The dashboard works from a large S&P 500 candidate pool. Jointly selecting a fixed number of stocks from that pool is a combinatorial problem, which is much harder than solving a continuous quadratic program on one fixed subset.</p>
+
+<p>In practical terms:</p>
+
+<p>- sampled subset + QP scales with the number of subsets tested
+- mixed-integer optimization can branch over a very large stock-selection search space
+- runtime is much less predictable for an interactive browser app</p>
+
+<h3>2. Frontend architecture fit</h3>
+
+<p>The current app is a Vite React frontend with lightweight client-side optimization. Mixed-integer optimization is usually better suited to:</p>
+
+<p>- a backend optimization service
+- a dedicated commercial or industrial solver
+- longer-running jobs with explicit status handling</p>
+
+<p>That is a much heavier architecture than the current dashboard needs.</p>
+
+<h3>3. Implementation complexity</h3>
+
+<p>Mixed-integer optimization would add substantial complexity around:</p>
+
+<p>- binary decision variables for stock selection
+- cardinality constraints
+- solver tolerances and time limits
+- infeasibility handling
+- deployment and runtime packaging</p>
+
+<p>The current sampled subset + QP design gives most of the practical improvement over Monte Carlo without requiring that architecture jump.</p>
+
+<h2>How The Three Approaches Differ In Practice</h2>
 
 <p>Monte Carlo answers the problem by sampling many admissible portfolios and keeping the best sampled one.</p>
 
-<p>Deterministic optimization answers the problem by sampling stock subsets, then solving a QP-backed efficient-frontier problem inside each subset and enforcing the cap explicitly at the frontier-selection step.</p>
+<p>Sampled subset + deterministic QP answers the problem by sampling stock subsets, then solving a QP-backed efficient-frontier problem inside each subset and enforcing the cap explicitly at the frontier-selection step.</p>
+
+<p>Mixed-integer optimization would answer the problem by jointly selecting the stocks and weights in one optimization model, rather than sampling subsets heuristically.</p>
 
 <p>In practical dashboard terms:</p>
 
 <p>- Monte Carlo is more exploratory
-- deterministic optimization is more efficient for standard objectives inside a tested subset
-- both use the same market data, return model, covariance model, and VaR options</p>
+- sampled subset + deterministic QP is more efficient for standard objectives inside a tested subset
+- mixed-integer optimization is the most rigorous, but least practical for the current frontend setup
+- all three methods use the same market data, return model, covariance model, and VaR concepts</p>
 
 <hr>
 
@@ -541,6 +601,7 @@ $$
 
 <p>- optimization objectives
 - deterministic optimization method
+- any decision around mixed-integer optimization or backend solvers
 - Monte Carlo sampling rule
 - risk-free rate
 - VaR implementation
@@ -548,7 +609,7 @@ $$
     </main>
     
     <footer>
-        <p>Portfolio Optimization Documentation | Generated on 2026-03-22 16:58</p>
+        <p>Portfolio Optimization Documentation | Generated on 2026-03-22 17:06</p>
         <p>Built with Python, MathJax, and Highlight.js</p>
     </footer>
 </body>
