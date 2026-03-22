@@ -189,13 +189,15 @@ This approach is flexible and easy to run interactively, but it is a search heur
 
 ### Deterministic engine
 
-The deterministic path replaces random search with direct optimization under the same long-only, fully invested constraints.
+The deterministic path still searches across sampled stock subsets, but replaces random weight search inside each subset with direct optimization under the same long-only, fully invested constraints.
 
 It is used for:
 
 - True Min Variance
 - Best Max Sharpe
 - Best Min Variance by Sharpe with a volatility cap
+
+The user-selected run count now controls how many stock subsets are sampled in deterministic mode.
 
 #### Feasible set
 
@@ -205,32 +207,31 @@ $$
 \Delta = \{ \mathbf{w} \in \mathbb{R}^n \mid w_i \ge 0,\; \sum_{i=1}^{n} w_i = 1 \}
 $$
 
-#### Projected optimization idea
+#### Quadratic programming and frontier construction
 
-Starting from a feasible weight vector $\mathbf{w}^{(k)}$, the method takes an improving step and projects it back onto the simplex:
-
-$$
-\tilde{\mathbf{w}}^{(k+1)} = \mathbf{w}^{(k)} + \alpha_k \nabla f\left(\mathbf{w}^{(k)}\right)
-$$
+For each sampled subset, the dashboard first regularizes the covariance matrix:
 
 $$
-\mathbf{w}^{(k+1)} = \Pi_{\Delta}\left(\tilde{\mathbf{w}}^{(k+1)}\right)
+\Sigma_{\text{reg}} = \frac{1}{2}(\Sigma + \Sigma^\top) + \lambda I
 $$
 
-Where:
+where $\lambda$ is a small ridge term added for numerical stability.
 
-- $f(\mathbf{w})$ is the objective being optimized
-- $\alpha_k$ is the step size
-- $\Pi_{\Delta}$ is projection back onto the feasible simplex
+The deterministic engine then solves long-only quadratic programs on the feasible simplex:
 
-Conceptually, this means:
+$$
+\Delta = \{ \mathbf{w} \in \mathbb{R}^n \mid w_i \ge 0,\; \sum_{i=1}^{n} w_i = 1 \}
+$$
 
-1. start from a valid portfolio
-2. move in the direction that improves the target objective
-3. force the updated weights back into the valid long-only, fully invested region
-4. repeat until the solution stabilizes
+For target-return frontier points, it solves:
 
-This projected optimization structure is used for the unconstrained deterministic objectives.
+$$
+\min_{\mathbf{w} \in \Delta} \; \mathbf{w}^\top \Sigma_{\text{reg}} \mathbf{w}
+\quad \text{subject to} \quad
+\mathbf{w}^\top \mu \ge R_{\text{target}}
+$$
+
+This produces a deterministic efficient frontier for the current stock subset.
 
 #### Deterministic objectives in the dashboard
 
@@ -254,13 +255,20 @@ $$
 \sqrt{\mathbf{w}^\top \boldsymbol{\Sigma} \mathbf{w}} \le \sigma_{\max}
 $$
 
-In the current implementation, the capped case is handled by searching only among feasible portfolios that satisfy the volatility constraint, rather than by relying on an unconstrained penalty score alone.
+In the current implementation, **True Min Variance** is solved directly as a quadratic program, and **Best Max Sharpe** plus capped **Best Min Variance by Sharpe** are selected from the efficient frontier built from repeated target-return QP solves.
 
 So the deterministic engine uses:
 
-- projected optimization for **True Min Variance**
-- projected optimization for **Best Max Sharpe**
-- feasible constrained search for **Best Min Variance by Sharpe**
+- covariance regularization for each sampled subset
+- quadratic programming for **True Min Variance**
+- efficient-frontier selection for **Best Max Sharpe**
+- efficient-frontier selection under a hard volatility cap for **Best Min Variance by Sharpe**
+
+#### Global vs local optimality
+
+The deterministic engine is exact for the weight optimization step inside each sampled subset.
+
+It is not globally exact across the full S&P 500 candidate universe, because subset selection is still sampled rather than solved jointly with a mixed-integer optimizer.
 
 ---
 

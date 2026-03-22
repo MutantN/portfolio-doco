@@ -140,11 +140,13 @@ The main portfolio logic still lives in `src/App.jsx`.
 
 - computes a normal-approximation VaR from annualized return and volatility
 
-### `optimize(mu, cv, seed, mode)`
+### `solvePortfolioSet(mu, cv, engineMode, seed, volatilityCap, riskFreeRate)`
 
-- runs a Monte Carlo-style search over random long-only weights
+- Monte Carlo mode runs random long-only weight searches for the requested objectives
 
-- returns the best portfolio under the requested objective
+- deterministic mode runs the QP-backed optimizer on a sampled stock subset
+
+- returns the portfolio set used by the dashboard views
 
 ### `runSim(...)`
 

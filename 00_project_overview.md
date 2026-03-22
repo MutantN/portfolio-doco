@@ -44,7 +44,7 @@ Production deployment is live at:
 The current production dashboard supports:
 
 - Monte Carlo portfolio simulation across user-selected stock counts and simulation passes
-- Deterministic optimization across the same stock set
+- Deterministic search across sampled stock subsets, with quadratic programming inside each tested subset
 - Comparison of **Best Min Variance by Sharpe**, **Best Max Sharpe**, and **True Min Variance** portfolios
 - User-set annualized volatility threshold for **Best Min Variance by Sharpe** in deterministic mode
 - User-set annualized risk-free rate for Sharpe calculations
@@ -140,15 +140,27 @@ The current production dashboard supports:
 
   - deterministic optimization
 
-    - projected optimization for unconstrained deterministic objectives
+    - samples the user-selected number of stock subsets from the S&P 500 list
 
-    - hard feasible-search path for capped **Best Min Variance by Sharpe**
+    - regularizes the covariance matrix for each tested subset
+
+    - solves **True Min Variance** with long-only quadratic programming
+
+    - builds an efficient frontier across target-return QP solves
+
+    - selects **Best Max Sharpe** and capped **Best Min Variance by Sharpe** from that frontier
 
 - Deterministic Best Min Variance by Sharpe rule:
 
   - maximize Sharpe subject to a user-set annualized volatility cap
 
   - the cap applies only to **Best Min Variance by Sharpe**, not to **True Min Variance** or **Best Max Sharpe**
+
+- Deterministic scope:
+
+  - exact for weights within each sampled subset
+
+  - not globally exact over the full S&P 500 because subset selection is still sampled rather than solved jointly
 
 - VaR methods:
 

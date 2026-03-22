@@ -106,27 +106,44 @@ The user separately controls how many Monte Carlo passes are run.
 
 ### Core idea
 
-The deterministic engine replaces random search with direct optimization over the same feasible portfolio set.
+The deterministic engine still samples stock subsets, but replaces random weight search inside each subset with direct optimization over the same feasible portfolio set.
 
-### Projection framework
+### Search structure
 
-Starting from a feasible portfolio $\mathbf{w}^{(k)}$, the optimizer takes an improving step and then projects the result back onto the simplex:
+The deterministic path does this:
+
+1. sample the user-selected number of stock subsets from the S&P 500 list
+2. build expected returns and historical covariance for each subset
+3. regularize the covariance matrix for numerical stability
+4. solve a deterministic portfolio set inside each subset
+5. rank the solved subsets and keep the best resulting portfolios
+
+So the current deterministic mode is:
+
+- deterministic for weights inside each tested subset
+- sampled and heuristic for stock-universe selection
+
+### Quadratic programming framework
+
+For each sampled subset, the engine regularizes covariance as:
 
 $$
-\tilde{\mathbf{w}}^{(k+1)} = \mathbf{w}^{(k)} + \alpha_k \nabla f\left(\mathbf{w}^{(k)}\right)
+\Sigma_{\text{reg}} = \frac{1}{2}(\Sigma + \Sigma^\top) + \lambda I
 $$
 
+It then solves long-only quadratic programs over:
+
 $$
-\mathbf{w}^{(k+1)} = \Pi_{\Delta}\left(\tilde{\mathbf{w}}^{(k+1)}\right)
+\Delta = \{ \mathbf{w} \in \mathbb{R}^n \mid w_i \ge 0,\; \sum_i w_i = 1 \}
 $$
 
-Where:
+To build the efficient frontier, it repeatedly solves:
 
-- $f(\mathbf{w})$ is the target objective
-- $\alpha_k$ is the step size
-- $\Pi_{\Delta}$ projects back to a valid long-only, fully invested portfolio
-
-This projection framework is used for the unconstrained deterministic objectives.
+$$
+\min_{\mathbf{w} \in \Delta} \; \mathbf{w}^\top \Sigma_{\text{reg}} \mathbf{w}
+\quad \text{subject to} \quad
+\mathbf{w}^\top \mu \ge R_{\text{target}}
+$$
 
 ### Objectives used in the dashboard
 
@@ -152,19 +169,20 @@ $$
 
 This means the user chooses an annualized volatility cap and the optimizer finds the best risk-adjusted portfolio within that limit.
 
-In the current implementation, this capped portfolio is handled through a feasible constrained search path that only accepts portfolios satisfying the volatility cap.
+In the current implementation, the capped portfolio is chosen from efficient-frontier points that satisfy the volatility cap, not from a projected feasible-search routine.
 
 ### Strengths
 
 - faster and more stable for standard portfolio objectives
 - closer to a direct optimization solution
 - easier to interpret when the objective is clearly defined
+- reproducible for the same sampled subsets and inputs
 
 ### Weaknesses
 
-- less flexible than Monte Carlo for ad hoc search rules
-- still depends on the quality of the projected and feasible-search routines
-- not a full industrial optimization stack or complete efficient-frontier solver
+- still depends on sampled subset coverage, so it is not globally optimal over stock selection
+- more computational work per subset than pure random-weight sampling
+- not a mixed-integer global stock-selection optimizer
 
 ---
 
@@ -172,12 +190,12 @@ In the current implementation, this capped portfolio is handled through a feasib
 
 Monte Carlo answers the problem by sampling many admissible portfolios and keeping the best sampled one.
 
-Deterministic optimization answers the problem by moving directly through the feasible region toward a better solution under the stated objective, and by enforcing the cap explicitly for the capped Sharpe portfolio.
+Deterministic optimization answers the problem by sampling stock subsets, then solving a QP-backed efficient-frontier problem inside each subset and enforcing the cap explicitly at the frontier-selection step.
 
 In practical dashboard terms:
 
 - Monte Carlo is more exploratory
-- deterministic optimization is more efficient for standard objectives
+- deterministic optimization is more efficient for standard objectives inside a tested subset
 - both use the same market data, return model, covariance model, and VaR options
 
 ---
