@@ -1,487 +1,523 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio Dashboard API Reference - Portfolio Optimization Documentation</title>
-    
-    <!-- MathJax for LaTeX rendering -->
-    <script>
-        MathJax = {
-            tex: {
-                inlineMath: [['$', '$'], ['\\(', '\\)']],
-                displayMath: [['$$', '$$'], ['\\[', '\\]']],
-                processEscapes: true,
-                processEnvironments: true,
-                tags: 'ams'
-            },
-            options: {
-                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-            },
-            startup: {
-                ready: function() {
-                    MathJax.startup.defaultReady();
-                }
-            }
-        };
-    </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    
-    <!-- Highlight.js for code syntax highlighting -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
-    <script>hljs.highlightAll();</script>
-    
-    <style>
-        :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #3498db;
-            --accent-color: #e74c3c;
-            --background-color: #ffffff;
-            --text-color: #333333;
-            --code-bg: #f8f8f8;
-            --border-color: #e1e4e8;
-            --nav-bg: #f6f8fa;
-        }
-        
-        * {
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            line-height: 1.7;
-            color: var(--text-color);
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: var(--background-color);
-        }
-        
-        /* Navigation */
-        nav {
-            background-color: var(--nav-bg);
-            padding: 15px 20px;
-            border-radius: 8px;
-            margin-bottom: 30px;
-            border: 1px solid var(--border-color);
-        }
-        
-        nav ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        
-        nav a {
-            color: var(--secondary-color);
-            text-decoration: none;
-            font-weight: 500;
-            padding: 8px 12px;
-            border-radius: 4px;
-            transition: background-color 0.2s;
-            font-size: 0.9em;
-        }
-        
-        nav a:hover {
-            background-color: var(--secondary-color);
-            color: white;
-        }
-        
-        nav a.active {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        
-        /* Headings */
-        h1 {
-            color: var(--primary-color);
-            border-bottom: 3px solid var(--secondary-color);
-            padding-bottom: 10px;
-            margin-top: 0;
-        }
-        
-        h2 {
-            color: var(--primary-color);
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 8px;
-            margin-top: 40px;
-        }
-        
-        h3 {
-            color: var(--secondary-color);
-            margin-top: 30px;
-        }
-        
-        h4 {
-            color: var(--primary-color);
-            margin-top: 25px;
-        }
-        
-        /* Links */
-        a {
-            color: var(--secondary-color);
-            text-decoration: none;
-        }
-        
-        a:hover {
-            text-decoration: underline;
-        }
-        
-        /* Code */
-        code {
-            font-family: 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace;
-            font-size: 0.9em;
-        }
-        
-        :not(pre) > code {
-            background-color: var(--code-bg);
-            padding: 2px 6px;
-            border-radius: 4px;
-            border: 1px solid var(--border-color);
-        }
-        
-        pre {
-            background-color: var(--code-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 16px;
-            overflow-x: auto;
-        }
-        
-        pre code {
-            background: none;
-            border: none;
-            padding: 0;
-        }
-        
-        /* Tables */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            font-size: 0.95em;
-        }
-        
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border: 1px solid var(--border-color);
-        }
-        
-        th {
-            background-color: var(--primary-color);
-            color: white;
-            font-weight: 600;
-        }
-        
-        tr:nth-child(even) {
-            background-color: var(--nav-bg);
-        }
-        
-        tr:hover {
-            background-color: #e8f4f8;
-        }
-        
-        /* Blockquotes */
-        blockquote {
-            border-left: 4px solid var(--secondary-color);
-            margin: 20px 0;
-            padding: 10px 20px;
-            background-color: var(--nav-bg);
-            border-radius: 0 8px 8px 0;
-        }
-        
-        blockquote p {
-            margin: 0;
-        }
-        
-        /* Math display */
-        mjx-container[jax="CHTML"][display="true"] {
-            margin: 25px 0 !important;
-            overflow-x: auto;
-            overflow-y: hidden;
-        }
-        
-        /* Horizontal rules */
-        hr {
-            border: none;
-            border-top: 2px solid var(--border-color);
-            margin: 40px 0;
-        }
-        
-        /* Lists */
-        ul, ol {
-            padding-left: 25px;
-        }
-        
-        li {
-            margin: 8px 0;
-        }
-        
-        /* Footer */
-        footer {
-            margin-top: 60px;
-            padding-top: 20px;
-            border-top: 1px solid var(--border-color);
-            text-align: center;
-            color: #666;
-            font-size: 0.9em;
-        }
-        
-        /* Author info */
-        .author-info {
-            color: #666;
-            font-style: italic;
-            margin-bottom: 20px;
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            body {
-                padding: 15px;
-            }
-            
-            nav ul {
-                flex-direction: column;
-                gap: 8px;
-            }
-            
-            table {
-                font-size: 0.85em;
-            }
-            
-            th, td {
-                padding: 8px 10px;
-            }
-        }
-        
-        /* Print styles */
-        @media print {
-            nav, footer {
-                display: none;
-            }
-            
-            body {
-                max-width: none;
-                padding: 0;
-            }
-            
-            pre {
-                white-space: pre-wrap;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio Dashboard API Reference - Portfolio Dashboard Docs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css">
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  <style>
+  :root {
+    --bg: #f7fafc;
+    --card: #ffffff;
+    --ink: #0f172a;
+    --muted: #475569;
+    --line: #dbe4ee;
+    --accent: #0f766e;
+    --accent-2: #1d4ed8;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+    color: var(--ink);
+    background:
+      radial-gradient(1000px 500px at 10% -10%, #dbeafe 0%, transparent 55%),
+      radial-gradient(900px 500px at 100% 0%, #dcfce7 0%, transparent 55%),
+      var(--bg);
+  }
+
+  .shell {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 32px 20px 56px;
+  }
+
+  .topbar {
+    margin-bottom: 20px;
+    padding: 16px 18px;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+  }
+
+  .topbar h1 {
+    margin: 0 0 8px;
+    font-size: 20px;
+  }
+
+  .topbar p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr);
+    gap: 20px;
+    align-items: start;
+  }
+
+  .nav {
+    position: sticky;
+    top: 20px;
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    background: var(--card);
+  }
+
+  .nav h2 {
+    margin: 0 0 12px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+
+  .nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 8px;
+  }
+
+  .nav a {
+    display: block;
+    text-decoration: none;
+    color: var(--ink);
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid transparent;
+  }
+
+  .nav a:hover,
+  .nav a.active {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+  }
+
+  .content {
+    padding: 28px 32px;
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    background: var(--card);
+    box-shadow: 0 18px 50px rgba(15, 23, 42, 0.06);
+  }
+
+  .content h1 {
+    margin-top: 0;
+    font-size: clamp(30px, 4vw, 44px);
+    line-height: 1.08;
+  }
+
+  .content h2 {
+    margin-top: 32px;
+    padding-top: 8px;
+    border-top: 1px solid var(--line);
+    font-size: 24px;
+  }
+
+  .content h3 {
+    margin-top: 24px;
+    color: var(--accent-2);
+    font-size: 18px;
+  }
+
+  .content p,
+  .content li {
+    line-height: 1.75;
+  }
+
+  .content ul,
+  .content ol {
+    padding-left: 24px;
+    margin: 14px 0;
+  }
+
+  .content li + li {
+    margin-top: 8px;
+  }
+
+  .content ul ul,
+  .content ol ol,
+  .content ul ol,
+  .content ol ul {
+    margin-top: 8px;
+  }
+
+  .content code {
+    font-family: "JetBrains Mono", "SFMono-Regular", monospace;
+    font-size: 0.92em;
+  }
+
+  .content :not(pre) > code {
+    padding: 2px 6px;
+    border-radius: 8px;
+    background: #f8fafc;
+    border: 1px solid var(--line);
+  }
+
+  .content pre {
+    overflow-x: auto;
+    padding: 16px;
+    border-radius: 16px;
+    background: #0f172a;
+  }
+
+  .content pre code {
+    color: #e2e8f0;
+  }
+
+  .content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 18px 0;
+    table-layout: fixed;
+    display: block;
+    overflow-x: auto;
+  }
+
+  .content th,
+  .content td {
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    text-align: left;
+    vertical-align: top;
+    overflow-wrap: anywhere;
+  }
+
+  .content th {
+    background: #f8fafc;
+  }
+
+  .content blockquote {
+    margin: 20px 0;
+    padding: 12px 16px;
+    border-left: 4px solid var(--accent);
+    background: #f8fafc;
+    border-radius: 0 12px 12px 0;
+  }
+
+  .footer {
+    margin-top: 20px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  @media (max-width: 900px) {
+    .layout {
+      grid-template-columns: 1fr;
+    }
+
+    .nav {
+      position: static;
+    }
+
+    .content {
+      padding: 22px 18px;
+    }
+  }
+</style>
 </head>
 <body>
-    <nav>
+  <main class="shell">
+    <section class="topbar">
+      <h1>Portfolio Dashboard Docs</h1>
+      <p>Friendly documentation for the production Portfolio Dashboard and its supporting data flows.</p>
+    </section>
+    <section class="layout">
+      <nav class="nav">
+        <h2>Documents</h2>
         <ul>
-            <li><a href="00_project_overview.html" >Project Overview</a></li>
-            <li><a href="01_theory.html" >Theory</a></li>
-            <li><a href="02_quickstart.html" >Quickstart</a></li>
-            <li><a href="03_api_reference.html" class="active">Api Reference</a></li>
-            <li><a href="04_monte_carlo.html" >Monte Carlo</a></li>
-            <li><a href="README.html" >Readme</a></li>
+          <li><a class="" href="00_project_overview.html">Portfolio Dashboard Project Overview</a></li><li><a class="" href="01_theory.html">Portfolio Objective And Theoretical Background</a></li><li><a class="" href="02_quickstart.html">Portfolio Dashboard Quick Start</a></li><li><a class="active" href="03_api_reference.html">Portfolio Dashboard API Reference</a></li><li><a class="" href="04_monte_carlo.html">Optimization Method Comparison</a></li><li><a class="" href="README.html">Portfolio Dashboard Docs</a></li>
         </ul>
-    </nav>
-    
-    <main>
-        <strong>Author:</strong> Amadea Schaum  
-<strong>Date:</strong> March 2026
-
-<h1>Portfolio Dashboard API Reference</h1>
-
+      </nav>
+      <article class="content">
+        <p><strong>Author:</strong> Amadea Schaum<br>
+<strong>Date:</strong> March 2026</p>
+<h1 id="portfolio-dashboard-api-reference" tabindex="-1"><a class="header-anchor" href="#portfolio-dashboard-api-reference">Portfolio Dashboard API Reference</a></h1>
 <p>This page is the practical reference for the data endpoints and helper pieces behind the Portfolio Dashboard.</p>
-
 <hr>
-
-<h2>Main Moving Parts</h2>
-
+<h2 id="main-moving-parts" tabindex="-1"><a class="header-anchor" href="#main-moving-parts">Main Moving Parts</a></h2>
 <table>
-<tr><th>Interface</th><th>File</th><th>Purpose</th></tr>
-<tr><td>React app</td><td><code>/Users/A/portfolio-dashboard/src/App.jsx</code></td><td>Portfolio UI, simulation logic, live overlays</td></tr>
-<tr><td>Vite config</td><td><code>/Users/A/portfolio-dashboard/vite.config.js</code></td><td>Vite build config and dev/preview API middleware</td></tr>
-<tr><td>Vercel config</td><td><code>/Users/A/portfolio-dashboard/vercel.json</code></td><td>Production build/output/rewrite behavior</td></tr>
-<tr><td>Yahoo endpoint</td><td><code>/Users/A/portfolio-dashboard/api/yahoo-chart.js</code></td><td>Production serverless chart proxy</td></tr>
+<thead>
+<tr>
+<th>Interface</th>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>React app</td>
+<td><code>/Users/A/portfolio-dashboard/src/App.jsx</code></td>
+<td>Portfolio UI, simulation logic, live overlays</td>
+</tr>
+<tr>
+<td>Vite config</td>
+<td><code>/Users/A/portfolio-dashboard/vite.config.js</code></td>
+<td>Vite build config and dev/preview API middleware</td>
+</tr>
+<tr>
+<td>Vercel config</td>
+<td><code>/Users/A/portfolio-dashboard/vercel.json</code></td>
+<td>Production build/output/rewrite behavior</td>
+</tr>
+<tr>
+<td>Yahoo endpoint</td>
+<td><code>/Users/A/portfolio-dashboard/api/yahoo-chart.js</code></td>
+<td>Production serverless chart proxy</td>
+</tr>
+</tbody>
 </table>
-
 <hr>
-
-<h2>Environment Variables</h2>
-
+<h2 id="environment-variables" tabindex="-1"><a class="header-anchor" href="#environment-variables">Environment Variables</a></h2>
 <table>
-<tr><th>Variable</th><th>Required</th><th>Purpose</th></tr>
-<tr><td><code>FINNHUB_API_KEY</code></td><td>Yes for live quotes</td><td>Fetches latest quote data</td></tr>
-<tr><td><code>FMP_API_KEY</code></td><td>Yes for analyst overlays</td><td>Fetches target price and rating data</td></tr>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Required</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>FINNHUB_API_KEY</code></td>
+<td>Yes for live quotes</td>
+<td>Fetches latest quote data</td>
+</tr>
+<tr>
+<td><code>FMP_API_KEY</code></td>
+<td>Yes for analyst overlays</td>
+<td>Fetches target price and rating data</td>
+</tr>
+</tbody>
 </table>
-
 <hr>
-
-<h2>Frontend Helper</h2>
-
-<h3><code>apiPath(path)</code></h3>
-
+<h2 id="frontend-helper" tabindex="-1"><a class="header-anchor" href="#frontend-helper">Frontend Helper</a></h2>
+<h3 id="apipath(path)" tabindex="-1"><a class="header-anchor" href="#apipath(path)"><code>apiPath(path)</code></a></h3>
 <p>Location:</p>
-
-<p>- <code>src/App.jsx</code></p>
-
+<ul>
+<li><code>src/App.jsx</code></li>
+</ul>
 <p>Purpose:</p>
-
-<p>- builds API URLs from <code>import.meta.env.BASE_URL</code></p>
-
-<p>- keeps requests working both:</p>
-
-<p>- on the standalone Vercel deployment</p>
-
-<p>- under <code>/portfolio-dashboard/</code> on the main domain</p>
-
+<ul>
+<li>
+<p>builds API URLs from <code>import.meta.env.BASE_URL</code></p>
+</li>
+<li>
+<p>keeps requests working both:</p>
+<ul>
+<li>
+<p>on the standalone Vercel deployment</p>
+</li>
+<li>
+<p>under <code>/portfolio-dashboard/</code> on the main domain</p>
+</li>
+</ul>
+</li>
+</ul>
 <hr>
-
-<h2>Endpoint: <code>/api/yahoo-chart</code></h2>
-
-<h3>Production file</h3>
-
-<p>- <code>api/yahoo-chart.js</code></p>
-
-<h3>Dev/preview implementation</h3>
-
-<p>- <code>vite.config.js</code></p>
-
-<h3>Method</h3>
-
-<p>- <code>GET</code></p>
-
-<h3>Query parameters</h3>
-
+<h2 id="endpoint%3A-%2Fapi%2Fyahoo-chart" tabindex="-1"><a class="header-anchor" href="#endpoint%3A-%2Fapi%2Fyahoo-chart">Endpoint: <code>/api/yahoo-chart</code></a></h2>
+<h3 id="production-file" tabindex="-1"><a class="header-anchor" href="#production-file">Production file</a></h3>
+<ul>
+<li><code>api/yahoo-chart.js</code></li>
+</ul>
+<h3 id="dev%2Fpreview-implementation" tabindex="-1"><a class="header-anchor" href="#dev%2Fpreview-implementation">Dev/preview implementation</a></h3>
+<ul>
+<li><code>vite.config.js</code></li>
+</ul>
+<h3 id="method" tabindex="-1"><a class="header-anchor" href="#method">Method</a></h3>
+<ul>
+<li><code>GET</code></li>
+</ul>
+<h3 id="query-parameters" tabindex="-1"><a class="header-anchor" href="#query-parameters">Query parameters</a></h3>
 <table>
-<tr><th>Name</th><th>Required</th><th>Description</th></tr>
-<tr><td><code>ticker</code></td><td>Yes</td><td>Symbol, normalized for Yahoo Finance</td></tr>
-<tr><td><code>period1</code></td><td>Yes</td><td>Unix start timestamp</td></tr>
-<tr><td><code>period2</code></td><td>Yes</td><td>Unix end timestamp</td></tr>
+<thead>
+<tr>
+<th>Name</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ticker</code></td>
+<td>Yes</td>
+<td>Symbol, normalized for Yahoo Finance</td>
+</tr>
+<tr>
+<td><code>period1</code></td>
+<td>Yes</td>
+<td>Unix start timestamp</td>
+</tr>
+<tr>
+<td><code>period2</code></td>
+<td>Yes</td>
+<td>Unix end timestamp</td>
+</tr>
+</tbody>
 </table>
-
-<h3>Purpose</h3>
-
-<p>- fetches historical chart data from Yahoo Finance</p>
-
-<p>- returns the raw data used to build return series and portfolio risk inputs</p>
-
+<h3 id="purpose" tabindex="-1"><a class="header-anchor" href="#purpose">Purpose</a></h3>
+<ul>
+<li>
+<p>fetches historical chart data from Yahoo Finance</p>
+</li>
+<li>
+<p>returns the raw data used to build return series and portfolio risk inputs</p>
+</li>
+</ul>
 <hr>
-
-<h2>Endpoint: <code>/api/quotes</code></h2>
-
-<h3>Dev/preview implementation</h3>
-
-<p>- <code>vite.config.js</code></p>
-
-<h3>Method</h3>
-
-<p>- <code>GET</code></p>
-
-<h3>Query parameters</h3>
-
+<h2 id="endpoint%3A-%2Fapi%2Fquotes" tabindex="-1"><a class="header-anchor" href="#endpoint%3A-%2Fapi%2Fquotes">Endpoint: <code>/api/quotes</code></a></h2>
+<h3 id="dev%2Fpreview-implementation-1" tabindex="-1"><a class="header-anchor" href="#dev%2Fpreview-implementation-1">Dev/preview implementation</a></h3>
+<ul>
+<li><code>vite.config.js</code></li>
+</ul>
+<h3 id="method-1" tabindex="-1"><a class="header-anchor" href="#method-1">Method</a></h3>
+<ul>
+<li><code>GET</code></li>
+</ul>
+<h3 id="query-parameters-1" tabindex="-1"><a class="header-anchor" href="#query-parameters-1">Query parameters</a></h3>
 <table>
-<tr><th>Name</th><th>Required</th><th>Description</th></tr>
-<tr><td><code>symbols</code></td><td>Yes</td><td>Comma-separated ticker list</td></tr>
+<thead>
+<tr>
+<th>Name</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>symbols</code></td>
+<td>Yes</td>
+<td>Comma-separated ticker list</td>
+</tr>
+</tbody>
 </table>
-
-<h3>Purpose</h3>
-
-<p>- aggregates live quote and analyst context</p>
-
-<p>- returns merged data from:</p>
-
-<p>- Finnhub</p>
-
-<p>- Financial Modeling Prep</p>
-
-<h3>Response shape</h3>
-
-<pre><code class="language-json">{
-  "source": "Finnhub+FMP",
-  "quotes": {
-    "AAPL": {
-      "price": 250.12,
-      "prev": 255.76,
-      "name": "AAPL",
-      "exchange": "US",
-      "time": 1773432000,
-      "targetPrice": 316.36,
-      "targetDate": "",
-      "analystCount": 109,
-      "rating": "Buy",
-      "ratingDate": ""
-    }
-  },
-  "missing": []
-}
+<h3 id="purpose-1" tabindex="-1"><a class="header-anchor" href="#purpose-1">Purpose</a></h3>
+<ul>
+<li>
+<p>aggregates live quote and analyst context</p>
+</li>
+<li>
+<p>returns merged data from:</p>
+<ul>
+<li>
+<p>Finnhub</p>
+</li>
+<li>
+<p>Financial Modeling Prep</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="response-shape" tabindex="-1"><a class="header-anchor" href="#response-shape">Response shape</a></h3>
+<pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;source&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Finnhub+FMP&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;quotes&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">&quot;AAPL&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">&quot;price&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">250.12</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;prev&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">255.76</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;AAPL&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;exchange&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;US&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;time&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1773432000</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;targetPrice&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">316.36</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;targetDate&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;analystCount&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">109</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;rating&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Buy&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;ratingDate&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;&quot;</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;missing&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-punctuation">]</span>
+<span class="hljs-punctuation">}</span>
 </code></pre>
-
 <hr>
-
-<h2>Core Portfolio Functions</h2>
-
+<h2 id="core-portfolio-functions" tabindex="-1"><a class="header-anchor" href="#core-portfolio-functions">Core Portfolio Functions</a></h2>
 <p>The main portfolio logic still lives in <code>src/App.jsx</code>.</p>
-
-<h3><code>historicalVaRProxy(dailyReturns, weights)</code></h3>
-
-<p>- computes a worst realized rolling-loss proxy from historical returns</p>
-
-<h3><code>parametricVaR(dailyReturns, weights, oneInYears=2)</code></h3>
-
-<p>- computes a normal-approximation VaR from annualized return and volatility</p>
-
-<h3><code>solvePortfolioSet(mu, cv, engineMode, seed, volatilityCap, riskFreeRate)</code></h3>
-
-<p>- Monte Carlo mode runs random long-only weight searches for the requested objectives</p>
-
-<p>- deterministic mode runs the QP-backed optimizer on a sampled stock subset</p>
-
-<p>- returns the portfolio set used by the dashboard views</p>
-
-<h3><code>runSim(...)</code></h3>
-
-<p>- runs one simulation pass over the selected stocks</p>
-
-<p>- produces the portfolio statistics used in the dashboard views</p>
-
+<h3 id="historicalvarproxy(dailyreturns%2C-weights)" tabindex="-1"><a class="header-anchor" href="#historicalvarproxy(dailyreturns%2C-weights)"><code>historicalVaRProxy(dailyReturns, weights)</code></a></h3>
+<ul>
+<li>computes a worst realized rolling-loss proxy from historical returns</li>
+</ul>
+<h3 id="parametricvar(dailyreturns%2C-weights%2C-oneinyears%3D2)" tabindex="-1"><a class="header-anchor" href="#parametricvar(dailyreturns%2C-weights%2C-oneinyears%3D2)"><code>parametricVaR(dailyReturns, weights, oneInYears=2)</code></a></h3>
+<ul>
+<li>computes a normal-approximation VaR from annualized return and volatility</li>
+</ul>
+<h3 id="solveportfolioset(mu%2C-cv%2C-enginemode%2C-seed%2C-volatilitycap%2C-riskfreerate)" tabindex="-1"><a class="header-anchor" href="#solveportfolioset(mu%2C-cv%2C-enginemode%2C-seed%2C-volatilitycap%2C-riskfreerate)"><code>solvePortfolioSet(mu, cv, engineMode, seed, volatilityCap, riskFreeRate)</code></a></h3>
+<ul>
+<li>
+<p>Monte Carlo mode runs random long-only weight searches for the requested objectives</p>
+</li>
+<li>
+<p>deterministic mode runs the QP-backed optimizer on a sampled stock subset</p>
+</li>
+<li>
+<p>returns the portfolio set used by the dashboard views</p>
+</li>
+</ul>
+<h3 id="runsim(...)" tabindex="-1"><a class="header-anchor" href="#runsim(...)"><code>runSim(...)</code></a></h3>
+<ul>
+<li>
+<p>runs one simulation pass over the selected stocks</p>
+</li>
+<li>
+<p>produces the portfolio statistics used in the dashboard views</p>
+</li>
+</ul>
 <hr>
-
-<h2>Deployment Behavior</h2>
-
-<h3>Vite</h3>
-
-<p>- <code>base: "./"</code> ensures relative assets in production</p>
-
-<h3>Vercel</h3>
-
-<p>- framework: <code>vite</code></p>
-
-<p>- build command: <code>npm run build</code></p>
-
-<p>- output directory: <code>dist</code></p>
-
-<p>- non-file routes rewrite to <code>index.html</code></p>
-
+<h2 id="deployment-behavior" tabindex="-1"><a class="header-anchor" href="#deployment-behavior">Deployment Behavior</a></h2>
+<h3 id="vite" tabindex="-1"><a class="header-anchor" href="#vite">Vite</a></h3>
+<ul>
+<li><code>base: &quot;./&quot;</code> ensures relative assets in production</li>
+</ul>
+<h3 id="vercel" tabindex="-1"><a class="header-anchor" href="#vercel">Vercel</a></h3>
+<ul>
+<li>
+<p>framework: <code>vite</code></p>
+</li>
+<li>
+<p>build command: <code>npm run build</code></p>
+</li>
+<li>
+<p>output directory: <code>dist</code></p>
+</li>
+<li>
+<p>non-file routes rewrite to <code>index.html</code></p>
+</li>
+</ul>
 <hr>
+<h2 id="operational-notes" tabindex="-1"><a class="header-anchor" href="#operational-notes">Operational Notes</a></h2>
+<ul>
+<li>
+<p>The dashboard is Git-connected to <code>MutantN/portfolio-dashboard</code></p>
+</li>
+<li>
+<p>Production deployment is triggered from Git pushes or manual <code>vercel --prod</code></p>
+</li>
+<li>
+<p>Routed custom-domain access is provided through <code>as-hobby-home</code></p>
+</li>
+</ul>
 
-<h2>Operational Notes</h2>
-
-<p>- The dashboard is Git-connected to <code>MutantN/portfolio-dashboard</code></p>
-
-<p>- Production deployment is triggered from Git pushes or manual <code>vercel --prod</code></p>
-
-<p>- Routed custom-domain access is provided through <code>as-hobby-home</code></p>
-    </main>
-    
-    <footer>
-        <p>Portfolio Optimization Documentation | Generated on 2026-03-22 17:25</p>
-        <p>Built with Python, MathJax, and Highlight.js</p>
-    </footer>
+        <div class="footer">Source project: <code>/Users/A/portfolio-doco</code></div>
+      </article>
+    </section>
+  </main>
 </body>
 </html>

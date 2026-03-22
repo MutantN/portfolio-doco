@@ -1,686 +1,523 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio Objective And Theoretical Background - Portfolio Optimization Documentation</title>
-    
-    <!-- MathJax for LaTeX rendering -->
-    <script>
-        MathJax = {
-            tex: {
-                inlineMath: [['$', '$'], ['\\(', '\\)']],
-                displayMath: [['$$', '$$'], ['\\[', '\\]']],
-                processEscapes: true,
-                processEnvironments: true,
-                tags: 'ams'
-            },
-            options: {
-                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-            },
-            startup: {
-                ready: function() {
-                    MathJax.startup.defaultReady();
-                }
-            }
-        };
-    </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    
-    <!-- Highlight.js for code syntax highlighting -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
-    <script>hljs.highlightAll();</script>
-    
-    <style>
-        :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #3498db;
-            --accent-color: #e74c3c;
-            --background-color: #ffffff;
-            --text-color: #333333;
-            --code-bg: #f8f8f8;
-            --border-color: #e1e4e8;
-            --nav-bg: #f6f8fa;
-        }
-        
-        * {
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            line-height: 1.7;
-            color: var(--text-color);
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: var(--background-color);
-        }
-        
-        /* Navigation */
-        nav {
-            background-color: var(--nav-bg);
-            padding: 15px 20px;
-            border-radius: 8px;
-            margin-bottom: 30px;
-            border: 1px solid var(--border-color);
-        }
-        
-        nav ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        
-        nav a {
-            color: var(--secondary-color);
-            text-decoration: none;
-            font-weight: 500;
-            padding: 8px 12px;
-            border-radius: 4px;
-            transition: background-color 0.2s;
-            font-size: 0.9em;
-        }
-        
-        nav a:hover {
-            background-color: var(--secondary-color);
-            color: white;
-        }
-        
-        nav a.active {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        
-        /* Headings */
-        h1 {
-            color: var(--primary-color);
-            border-bottom: 3px solid var(--secondary-color);
-            padding-bottom: 10px;
-            margin-top: 0;
-        }
-        
-        h2 {
-            color: var(--primary-color);
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 8px;
-            margin-top: 40px;
-        }
-        
-        h3 {
-            color: var(--secondary-color);
-            margin-top: 30px;
-        }
-        
-        h4 {
-            color: var(--primary-color);
-            margin-top: 25px;
-        }
-        
-        /* Links */
-        a {
-            color: var(--secondary-color);
-            text-decoration: none;
-        }
-        
-        a:hover {
-            text-decoration: underline;
-        }
-        
-        /* Code */
-        code {
-            font-family: 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace;
-            font-size: 0.9em;
-        }
-        
-        :not(pre) > code {
-            background-color: var(--code-bg);
-            padding: 2px 6px;
-            border-radius: 4px;
-            border: 1px solid var(--border-color);
-        }
-        
-        pre {
-            background-color: var(--code-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 16px;
-            overflow-x: auto;
-        }
-        
-        pre code {
-            background: none;
-            border: none;
-            padding: 0;
-        }
-        
-        /* Tables */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            font-size: 0.95em;
-        }
-        
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border: 1px solid var(--border-color);
-        }
-        
-        th {
-            background-color: var(--primary-color);
-            color: white;
-            font-weight: 600;
-        }
-        
-        tr:nth-child(even) {
-            background-color: var(--nav-bg);
-        }
-        
-        tr:hover {
-            background-color: #e8f4f8;
-        }
-        
-        /* Blockquotes */
-        blockquote {
-            border-left: 4px solid var(--secondary-color);
-            margin: 20px 0;
-            padding: 10px 20px;
-            background-color: var(--nav-bg);
-            border-radius: 0 8px 8px 0;
-        }
-        
-        blockquote p {
-            margin: 0;
-        }
-        
-        /* Math display */
-        mjx-container[jax="CHTML"][display="true"] {
-            margin: 25px 0 !important;
-            overflow-x: auto;
-            overflow-y: hidden;
-        }
-        
-        /* Horizontal rules */
-        hr {
-            border: none;
-            border-top: 2px solid var(--border-color);
-            margin: 40px 0;
-        }
-        
-        /* Lists */
-        ul, ol {
-            padding-left: 25px;
-        }
-        
-        li {
-            margin: 8px 0;
-        }
-        
-        /* Footer */
-        footer {
-            margin-top: 60px;
-            padding-top: 20px;
-            border-top: 1px solid var(--border-color);
-            text-align: center;
-            color: #666;
-            font-size: 0.9em;
-        }
-        
-        /* Author info */
-        .author-info {
-            color: #666;
-            font-style: italic;
-            margin-bottom: 20px;
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            body {
-                padding: 15px;
-            }
-            
-            nav ul {
-                flex-direction: column;
-                gap: 8px;
-            }
-            
-            table {
-                font-size: 0.85em;
-            }
-            
-            th, td {
-                padding: 8px 10px;
-            }
-        }
-        
-        /* Print styles */
-        @media print {
-            nav, footer {
-                display: none;
-            }
-            
-            body {
-                max-width: none;
-                padding: 0;
-            }
-            
-            pre {
-                white-space: pre-wrap;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio Objective And Theoretical Background - Portfolio Dashboard Docs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css">
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  <style>
+  :root {
+    --bg: #f7fafc;
+    --card: #ffffff;
+    --ink: #0f172a;
+    --muted: #475569;
+    --line: #dbe4ee;
+    --accent: #0f766e;
+    --accent-2: #1d4ed8;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+    color: var(--ink);
+    background:
+      radial-gradient(1000px 500px at 10% -10%, #dbeafe 0%, transparent 55%),
+      radial-gradient(900px 500px at 100% 0%, #dcfce7 0%, transparent 55%),
+      var(--bg);
+  }
+
+  .shell {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 32px 20px 56px;
+  }
+
+  .topbar {
+    margin-bottom: 20px;
+    padding: 16px 18px;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+  }
+
+  .topbar h1 {
+    margin: 0 0 8px;
+    font-size: 20px;
+  }
+
+  .topbar p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr);
+    gap: 20px;
+    align-items: start;
+  }
+
+  .nav {
+    position: sticky;
+    top: 20px;
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    background: var(--card);
+  }
+
+  .nav h2 {
+    margin: 0 0 12px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+
+  .nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 8px;
+  }
+
+  .nav a {
+    display: block;
+    text-decoration: none;
+    color: var(--ink);
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid transparent;
+  }
+
+  .nav a:hover,
+  .nav a.active {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+  }
+
+  .content {
+    padding: 28px 32px;
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    background: var(--card);
+    box-shadow: 0 18px 50px rgba(15, 23, 42, 0.06);
+  }
+
+  .content h1 {
+    margin-top: 0;
+    font-size: clamp(30px, 4vw, 44px);
+    line-height: 1.08;
+  }
+
+  .content h2 {
+    margin-top: 32px;
+    padding-top: 8px;
+    border-top: 1px solid var(--line);
+    font-size: 24px;
+  }
+
+  .content h3 {
+    margin-top: 24px;
+    color: var(--accent-2);
+    font-size: 18px;
+  }
+
+  .content p,
+  .content li {
+    line-height: 1.75;
+  }
+
+  .content ul,
+  .content ol {
+    padding-left: 24px;
+    margin: 14px 0;
+  }
+
+  .content li + li {
+    margin-top: 8px;
+  }
+
+  .content ul ul,
+  .content ol ol,
+  .content ul ol,
+  .content ol ul {
+    margin-top: 8px;
+  }
+
+  .content code {
+    font-family: "JetBrains Mono", "SFMono-Regular", monospace;
+    font-size: 0.92em;
+  }
+
+  .content :not(pre) > code {
+    padding: 2px 6px;
+    border-radius: 8px;
+    background: #f8fafc;
+    border: 1px solid var(--line);
+  }
+
+  .content pre {
+    overflow-x: auto;
+    padding: 16px;
+    border-radius: 16px;
+    background: #0f172a;
+  }
+
+  .content pre code {
+    color: #e2e8f0;
+  }
+
+  .content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 18px 0;
+    table-layout: fixed;
+    display: block;
+    overflow-x: auto;
+  }
+
+  .content th,
+  .content td {
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    text-align: left;
+    vertical-align: top;
+    overflow-wrap: anywhere;
+  }
+
+  .content th {
+    background: #f8fafc;
+  }
+
+  .content blockquote {
+    margin: 20px 0;
+    padding: 12px 16px;
+    border-left: 4px solid var(--accent);
+    background: #f8fafc;
+    border-radius: 0 12px 12px 0;
+  }
+
+  .footer {
+    margin-top: 20px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  @media (max-width: 900px) {
+    .layout {
+      grid-template-columns: 1fr;
+    }
+
+    .nav {
+      position: static;
+    }
+
+    .content {
+      padding: 22px 18px;
+    }
+  }
+</style>
 </head>
 <body>
-    <nav>
+  <main class="shell">
+    <section class="topbar">
+      <h1>Portfolio Dashboard Docs</h1>
+      <p>Friendly documentation for the production Portfolio Dashboard and its supporting data flows.</p>
+    </section>
+    <section class="layout">
+      <nav class="nav">
+        <h2>Documents</h2>
         <ul>
-            <li><a href="00_project_overview.html" >Project Overview</a></li>
-            <li><a href="01_theory.html" class="active">Theory</a></li>
-            <li><a href="02_quickstart.html" >Quickstart</a></li>
-            <li><a href="03_api_reference.html" >Api Reference</a></li>
-            <li><a href="04_monte_carlo.html" >Monte Carlo</a></li>
-            <li><a href="README.html" >Readme</a></li>
+          <li><a class="" href="00_project_overview.html">Portfolio Dashboard Project Overview</a></li><li><a class="active" href="01_theory.html">Portfolio Objective And Theoretical Background</a></li><li><a class="" href="02_quickstart.html">Portfolio Dashboard Quick Start</a></li><li><a class="" href="03_api_reference.html">Portfolio Dashboard API Reference</a></li><li><a class="" href="04_monte_carlo.html">Optimization Method Comparison</a></li><li><a class="" href="README.html">Portfolio Dashboard Docs</a></li>
         </ul>
-    </nav>
-    
-    <main>
-        <strong>Author:</strong> Amadea Schaum  
-<strong>Date:</strong> March 2026
-
-<h1>Portfolio Objective And Theoretical Background</h1>
-
-<h2>What This Page Explains</h2>
-
+      </nav>
+      <article class="content">
+        <p><strong>Author:</strong> Amadea Schaum<br>
+<strong>Date:</strong> March 2026</p>
+<h1 id="portfolio-objective-and-theoretical-background" tabindex="-1"><a class="header-anchor" href="#portfolio-objective-and-theoretical-background">Portfolio Objective And Theoretical Background</a></h1>
+<h2 id="what-this-page-explains" tabindex="-1"><a class="header-anchor" href="#what-this-page-explains">What This Page Explains</a></h2>
 <p>This page explains the analytical goal of the Portfolio Dashboard and the mathematical ideas behind it.</p>
-
 <p>The dashboard is trying to answer a simple question:</p>
-
-<p>- given a portfolio objective, what stock mix and weight allocation best satisfies it?</p>
-
+<ul>
+<li>given a portfolio objective, what stock mix and weight allocation best satisfies it?</li>
+</ul>
 <p>It answers that by:</p>
-
-<p>- estimating return and risk from market data
-- solving the portfolio under either a Monte Carlo engine or a deterministic engine
-- scoring portfolios against the chosen objective
-- surfacing the strongest result for each portfolio view</p>
-
+<ul>
+<li>estimating return and risk from market data</li>
+<li>solving the portfolio under either a Monte Carlo engine or a deterministic engine</li>
+<li>scoring portfolios against the chosen objective</li>
+<li>surfacing the strongest result for each portfolio view</li>
+</ul>
 <hr>
-
-<h2>The Building Blocks</h2>
-
+<h2 id="the-building-blocks" tabindex="-1"><a class="header-anchor" href="#the-building-blocks">The Building Blocks</a></h2>
 <p>The dashboard works with a few core ingredients:</p>
-
-<p>- a list of selected stocks
-- a weight for each stock
-- an expected return for each stock
-- a covariance matrix showing how stocks move together
-- a user-selected annualized risk-free rate</p>
-
+<ul>
+<li>a list of selected stocks</li>
+<li>a weight for each stock</li>
+<li>an expected return for each stock</li>
+<li>a covariance matrix showing how stocks move together</li>
+<li>a user-selected annualized risk-free rate</li>
+</ul>
 <p>The portfolio rules are intentionally simple:</p>
-
-<p>- weights cannot be negative
-- weights must add up to 1</p>
-
+<ul>
+<li>weights cannot be negative</li>
+<li>weights must add up to 1</li>
+</ul>
 <p>That means the dashboard is always showing a long-only, fully invested portfolio.</p>
-
 <hr>
-
-<h2>The Main Portfolio Measures</h2>
-
-<h3>Expected return</h3>
-
+<h2 id="the-main-portfolio-measures" tabindex="-1"><a class="header-anchor" href="#the-main-portfolio-measures">The Main Portfolio Measures</a></h2>
+<h3 id="expected-return" tabindex="-1"><a class="header-anchor" href="#expected-return">Expected return</a></h3>
 <p>The dashboard combines stock-level expected returns into a portfolio-level expected return:</p>
-
-$$
+<p>$$
 R_p = \mathbf{w}^\top \boldsymbol{\mu}
-$$
-
-<h3>Volatility</h3>
-
+$$</p>
+<h3 id="volatility" tabindex="-1"><a class="header-anchor" href="#volatility">Volatility</a></h3>
 <p>Portfolio risk is represented by volatility:</p>
-
-$$
+<p>$$
 \sigma_p = \sqrt{\mathbf{w}^\top \boldsymbol{\Sigma} \mathbf{w}}
-$$
-
-<h3>Sharpe ratio</h3>
-
+$$</p>
+<h3 id="sharpe-ratio" tabindex="-1"><a class="header-anchor" href="#sharpe-ratio">Sharpe ratio</a></h3>
 <p>The dashboard ranks risk-adjusted performance with a Sharpe ratio:</p>
-
-$$
+<p>$$
 \text{Sharpe} = \frac{R_p - R_f}{\sigma_p}
-$$
-
+$$</p>
 <p>Where:</p>
-
-<p>- $R_p$ is portfolio return
-- $R_f$ is the user-selected annualized risk-free rate
-- $\sigma_p$ is portfolio volatility</p>
-
+<ul>
+<li>$R_p$ is portfolio return</li>
+<li>$R_f$ is the user-selected annualized risk-free rate</li>
+<li>$\sigma_p$ is portfolio volatility</li>
+</ul>
 <p>Higher Sharpe means better return for the amount of risk taken.</p>
-
 <hr>
-
-<h2>The Three Portfolio Views In The Dashboard</h2>
-
+<h2 id="the-three-portfolio-views-in-the-dashboard" tabindex="-1"><a class="header-anchor" href="#the-three-portfolio-views-in-the-dashboard">The Three Portfolio Views In The Dashboard</a></h2>
 <p>The dashboard focuses on three portfolio views.</p>
-
-<h3>1. Best Min Variance by Sharpe</h3>
-
+<h3 id="1.-best-min-variance-by-sharpe" tabindex="-1"><a class="header-anchor" href="#1.-best-min-variance-by-sharpe">1. Best Min Variance by Sharpe</a></h3>
 <p>In deterministic mode, this is defined as:</p>
-
-$$
-\max_{\mathbf{w}} \; \frac{\mathbf{w}^\top \boldsymbol{\mu} - R_f}{\sqrt{\mathbf{w}^\top \boldsymbol{\Sigma} \mathbf{w}}}
-$$
-
+<p>$$
+\max_{\mathbf{w}} ; \frac{\mathbf{w}^\top \boldsymbol{\mu} - R_f}{\sqrt{\mathbf{w}^\top \boldsymbol{\Sigma} \mathbf{w}}}
+$$</p>
 <p>subject to:</p>
-
-$$
+<p>$$
 \sqrt{\mathbf{w}^\top \boldsymbol{\Sigma} \mathbf{w}} \le \sigma_{\max}
-$$
-
+$$</p>
 <p>and the usual portfolio constraints:</p>
-
-$$
+<p>$$
 w_i \ge 0, \qquad \sum_{i=1}^{n} w_i = 1
-$$
-
+$$</p>
 <p>In plain terms, the user chooses a volatility ceiling and the dashboard finds the best risk-adjusted portfolio that stays inside it.</p>
-
-<h3>2. Best Max Sharpe</h3>
-
+<h3 id="2.-best-max-sharpe" tabindex="-1"><a class="header-anchor" href="#2.-best-max-sharpe">2. Best Max Sharpe</a></h3>
 <p>This is the portfolio that gives the strongest Sharpe ratio under the selected engine:</p>
-
-$$
-\max_{\mathbf{w}} \; \frac{\mathbf{w}^\top \boldsymbol{\mu} - R_f}{\sqrt{\mathbf{w}^\top \boldsymbol{\Sigma} \mathbf{w}}}
-$$
-
+<p>$$
+\max_{\mathbf{w}} ; \frac{\mathbf{w}^\top \boldsymbol{\mu} - R_f}{\sqrt{\mathbf{w}^\top \boldsymbol{\Sigma} \mathbf{w}}}
+$$</p>
 <p>subject to:</p>
-
-$$
+<p>$$
 w_i \ge 0, \qquad \sum_{i=1}^{n} w_i = 1
-$$
-
-<h3>3. True Min Variance</h3>
-
+$$</p>
+<h3 id="3.-true-min-variance" tabindex="-1"><a class="header-anchor" href="#3.-true-min-variance">3. True Min Variance</a></h3>
 <p>This is the absolute lowest-volatility portfolio under the long-only, fully invested constraints:</p>
-
-$$
-\min_{\mathbf{w}} \; \mathbf{w}^\top \boldsymbol{\Sigma} \mathbf{w}
-$$
-
+<p>$$
+\min_{\mathbf{w}} ; \mathbf{w}^\top \boldsymbol{\Sigma} \mathbf{w}
+$$</p>
 <p>subject to:</p>
-
-$$
+<p>$$
 w_i \ge 0, \qquad \sum_{i=1}^{n} w_i = 1
-$$
-
+$$</p>
 <p>It does not try to improve return once volatility has been minimized.</p>
-
 <hr>
-
-<h2>Optimization Methodology</h2>
-
+<h2 id="optimization-methodology" tabindex="-1"><a class="header-anchor" href="#optimization-methodology">Optimization Methodology</a></h2>
 <p>The dashboard supports two optimization engines.</p>
-
-<h3>Monte Carlo engine</h3>
-
+<h3 id="monte-carlo-engine" tabindex="-1"><a class="header-anchor" href="#monte-carlo-engine">Monte Carlo engine</a></h3>
 <p>The Monte Carlo path generates random stock subsets, then random candidate portfolios on each subset, and scores them.</p>
-
 <p>It does this:</p>
-
-<p>1. run the user-selected number of simulation passes
-2. in each pass, randomly select the chosen number of stocks from the S&P 500 list
-3. for each objective on that stock subset, generate many random candidate weight sets
-4. normalize each weight set so total allocation is 100%
-5. calculate return, volatility, and Sharpe for each candidate
-6. keep the strongest candidate for the relevant objective on that pass</p>
-
+<ol>
+<li>run the user-selected number of simulation passes</li>
+<li>in each pass, randomly select the chosen number of stocks from the S&amp;P 500 list</li>
+<li>for each objective on that stock subset, generate many random candidate weight sets</li>
+<li>normalize each weight set so total allocation is 100%</li>
+<li>calculate return, volatility, and Sharpe for each candidate</li>
+<li>keep the strongest candidate for the relevant objective on that pass</li>
+</ol>
 <p>In the current implementation, each Monte Carlo objective search evaluates 2,000 candidate weight sets.</p>
-
 <p>The user separately controls how many Monte Carlo passes are run.</p>
-
-<h4>Random weight generation</h4>
-
+<h4 id="random-weight-generation" tabindex="-1"><a class="header-anchor" href="#random-weight-generation">Random weight generation</a></h4>
 <p>If random positive values $u_i$ are drawn, the app converts them to valid weights like this:</p>
-
-$$
+<p>$$
 w_i = \frac{u_i}{\sum_{j=1}^{n} u_j}
-$$
-
+$$</p>
 <p>That guarantees:</p>
-
-<p>- every weight stays non-negative
-- all weights sum to 1</p>
-
-<h4>Monte Carlo objective evaluation</h4>
-
+<ul>
+<li>every weight stays non-negative</li>
+<li>all weights sum to 1</li>
+</ul>
+<h4 id="monte-carlo-objective-evaluation" tabindex="-1"><a class="header-anchor" href="#monte-carlo-objective-evaluation">Monte Carlo objective evaluation</a></h4>
 <p>For each sampled portfolio, the dashboard evaluates:</p>
-
-$$
+<p>$$
 R_p = \mathbf{w}^\top \boldsymbol{\mu}
-$$
-
-$$
+$$</p>
+<p>$$
 \sigma_p = \sqrt{\mathbf{w}^\top \boldsymbol{\Sigma} \mathbf{w}}
-$$
-
-$$
+$$</p>
+<p>$$
 \text{Sharpe}(\mathbf{w}) = \frac{R_p - R_f}{\sigma_p}
-$$
-
+$$</p>
 <p>The engine then keeps the candidate that best matches the target objective on that pass.</p>
-
 <p>This approach is flexible and easy to run interactively, but it is a search heuristic rather than an exact optimizer.</p>
-
-<h3>Deterministic engine</h3>
-
+<h3 id="deterministic-engine" tabindex="-1"><a class="header-anchor" href="#deterministic-engine">Deterministic engine</a></h3>
 <p>The deterministic path still searches across sampled stock subsets, but replaces random weight search inside each subset with direct optimization under the same long-only, fully invested constraints.</p>
-
 <p>It is used for:</p>
-
-<p>- True Min Variance
-- Best Max Sharpe
-- Best Min Variance by Sharpe with a volatility cap</p>
-
+<ul>
+<li>True Min Variance</li>
+<li>Best Max Sharpe</li>
+<li>Best Min Variance by Sharpe with a volatility cap</li>
+</ul>
 <p>The user-selected run count now controls how many stock subsets are sampled in deterministic mode.</p>
-
-<h4>Feasible set</h4>
-
+<h4 id="feasible-set" tabindex="-1"><a class="header-anchor" href="#feasible-set">Feasible set</a></h4>
 <p>The deterministic engine works over the simplex of valid portfolios:</p>
-
-$$
-\Delta = \{ \mathbf{w} \in \mathbb{R}^n \mid w_i \ge 0,\; \sum_{i=1}^{n} w_i = 1 \}
-$$
-
-<h4>Quadratic programming and frontier construction</h4>
-
+<p>$$
+\Delta = { \mathbf{w} \in \mathbb{R}^n \mid w_i \ge 0,; \sum_{i=1}^{n} w_i = 1 }
+$$</p>
+<h4 id="quadratic-programming-and-frontier-construction" tabindex="-1"><a class="header-anchor" href="#quadratic-programming-and-frontier-construction">Quadratic programming and frontier construction</a></h4>
 <p>For each sampled subset, the dashboard first regularizes the covariance matrix:</p>
-
-$$
+<p>$$
 \Sigma_{\text{reg}} = \frac{1}{2}(\Sigma + \Sigma^\top) + \lambda I
-$$
-
+$$</p>
 <p>where $\lambda$ is a small ridge term added for numerical stability.</p>
-
 <p>The deterministic engine then solves long-only quadratic programs on the feasible simplex:</p>
-
-$$
-\Delta = \{ \mathbf{w} \in \mathbb{R}^n \mid w_i \ge 0,\; \sum_{i=1}^{n} w_i = 1 \}
-$$
-
+<p>$$
+\Delta = { \mathbf{w} \in \mathbb{R}^n \mid w_i \ge 0,; \sum_{i=1}^{n} w_i = 1 }
+$$</p>
 <p>For target-return frontier points, it solves:</p>
-
-$$
-\min_{\mathbf{w} \in \Delta} \; \mathbf{w}^\top \Sigma_{\text{reg}} \mathbf{w}
+<p>$$
+\min_{\mathbf{w} \in \Delta} ; \mathbf{w}^\top \Sigma_{\text{reg}} \mathbf{w}
 \quad \text{subject to} \quad
 \mathbf{w}^\top \mu \ge R_{\text{target}}
-$$
-
+$$</p>
 <p>This produces a deterministic efficient frontier for the current stock subset.</p>
-
-<h4>Deterministic objectives in the dashboard</h4>
-
+<h4 id="deterministic-objectives-in-the-dashboard" tabindex="-1"><a class="header-anchor" href="#deterministic-objectives-in-the-dashboard">Deterministic objectives in the dashboard</a></h4>
 <p>For True Min Variance, the objective is:</p>
-
-$$
-\min_{\mathbf{w} \in \Delta} \; \mathbf{w}^\top \boldsymbol{\Sigma} \mathbf{w}
-$$
-
+<p>$$
+\min_{\mathbf{w} \in \Delta} ; \mathbf{w}^\top \boldsymbol{\Sigma} \mathbf{w}
+$$</p>
 <p>For Best Max Sharpe, the objective is:</p>
-
-$$
-\max_{\mathbf{w} \in \Delta} \; \frac{\mathbf{w}^\top \boldsymbol{\mu} - R_f}{\sqrt{\mathbf{w}^\top \boldsymbol{\Sigma} \mathbf{w}}}
-$$
-
+<p>$$
+\max_{\mathbf{w} \in \Delta} ; \frac{\mathbf{w}^\top \boldsymbol{\mu} - R_f}{\sqrt{\mathbf{w}^\top \boldsymbol{\Sigma} \mathbf{w}}}
+$$</p>
 <p>For Best Min Variance by Sharpe, the objective is the same Sharpe maximization, but with an added volatility cap:</p>
-
-$$
-\max_{\mathbf{w} \in \Delta} \; \frac{\mathbf{w}^\top \boldsymbol{\mu} - R_f}{\sqrt{\mathbf{w}^\top \boldsymbol{\Sigma} \mathbf{w}}}
+<p>$$
+\max_{\mathbf{w} \in \Delta} ; \frac{\mathbf{w}^\top \boldsymbol{\mu} - R_f}{\sqrt{\mathbf{w}^\top \boldsymbol{\Sigma} \mathbf{w}}}
 \quad \text{subject to} \quad
 \sqrt{\mathbf{w}^\top \boldsymbol{\Sigma} \mathbf{w}} \le \sigma_{\max}
-$$
-
+$$</p>
 <p>In the current implementation, <strong>True Min Variance</strong> is solved directly as a quadratic program, and <strong>Best Max Sharpe</strong> plus capped <strong>Best Min Variance by Sharpe</strong> are selected from the efficient frontier built from repeated target-return QP solves.</p>
-
 <p>So the deterministic engine uses:</p>
-
-<p>- covariance regularization for each sampled subset
-- quadratic programming for <strong>True Min Variance</strong>
-- efficient-frontier selection for <strong>Best Max Sharpe</strong>
-- efficient-frontier selection under a hard volatility cap for <strong>Best Min Variance by Sharpe</strong></p>
-
-<h4>Global vs local optimality</h4>
-
+<ul>
+<li>covariance regularization for each sampled subset</li>
+<li>quadratic programming for <strong>True Min Variance</strong></li>
+<li>efficient-frontier selection for <strong>Best Max Sharpe</strong></li>
+<li>efficient-frontier selection under a hard volatility cap for <strong>Best Min Variance by Sharpe</strong></li>
+</ul>
+<h4 id="global-vs-local-optimality" tabindex="-1"><a class="header-anchor" href="#global-vs-local-optimality">Global vs local optimality</a></h4>
 <p>The deterministic engine is exact for the weight optimization step inside each sampled subset.</p>
-
-<p>It is not globally exact across the full S&P 500 candidate universe, because subset selection is still sampled rather than solved jointly with a mixed-integer optimizer.</p>
-
+<p>It is not globally exact across the full S&amp;P 500 candidate universe, because subset selection is still sampled rather than solved jointly with a mixed-integer optimizer.</p>
 <hr>
-
-<h2>How Historical Returns Are Built</h2>
-
+<h2 id="how-historical-returns-are-built" tabindex="-1"><a class="header-anchor" href="#how-historical-returns-are-built">How Historical Returns Are Built</a></h2>
 <p>The historical mode starts from Yahoo Finance price history.</p>
-
 <p>From that data, the dashboard builds daily returns and annualizes them using a 252-trading-day convention.</p>
-
-<h3>Annualized mean return</h3>
-
-$$
+<h3 id="annualized-mean-return" tabindex="-1"><a class="header-anchor" href="#annualized-mean-return">Annualized mean return</a></h3>
+<p>$$
 \mu_i = 252 \cdot \frac{1}{T} \sum_{t=1}^{T} r_{it}
-$$
-
-<h3>Annualized covariance</h3>
-
-$$
+$$</p>
+<h3 id="annualized-covariance" tabindex="-1"><a class="header-anchor" href="#annualized-covariance">Annualized covariance</a></h3>
+<p>$$
 \sigma_{ij} = 252 \cdot \text{Cov}(r_i, r_j)
-$$
-
+$$</p>
 <p>This historical return and covariance framework is the base model underneath the dashboard.</p>
-
 <hr>
-
-<h2>How Modeled Returns Work</h2>
-
+<h2 id="how-modeled-returns-work" tabindex="-1"><a class="header-anchor" href="#how-modeled-returns-work">How Modeled Returns Work</a></h2>
 <p>The dashboard also supports a modeled return mode.</p>
-
 <p>This mode does <strong>not</strong> replace the historical framework entirely. Instead, it changes the expected return input while keeping covariance historical.</p>
-
 <p>The modeled return path blends:</p>
-
-<p>- target-implied return from analyst target prices
-- historical annualized mean return</p>
-
-<h3>Target-implied return</h3>
-
+<ul>
+<li>target-implied return from analyst target prices</li>
+<li>historical annualized mean return</li>
+</ul>
+<h3 id="target-implied-return" tabindex="-1"><a class="header-anchor" href="#target-implied-return">Target-implied return</a></h3>
 <p>Conceptually, the dashboard derives implied upside as:</p>
-
-$$
+<p>$$
 \text{implied return} = \frac{\text{target price}}{\text{current price}} - 1
-$$
-
-<h3>Blending logic</h3>
-
+$$</p>
+<h3 id="blending-logic" tabindex="-1"><a class="header-anchor" href="#blending-logic">Blending logic</a></h3>
 <p>That implied return is then blended with the historical mean.</p>
-
 <p>The blend weight depends on analyst confidence, using analyst count as a proxy.</p>
-
 <p>In practical terms:</p>
-
-<p>- more analyst coverage gives more influence to the modeled return
-- less analyst coverage leaves more influence on the historical return estimate
-- covariance still comes from historical daily returns</p>
-
+<ul>
+<li>more analyst coverage gives more influence to the modeled return</li>
+<li>less analyst coverage leaves more influence on the historical return estimate</li>
+<li>covariance still comes from historical daily returns</li>
+</ul>
 <p>So the modeled mode changes the expected return vector, but not the covariance matrix.</p>
-
 <hr>
-
-<h2>How Risk Is Presented</h2>
-
+<h2 id="how-risk-is-presented" tabindex="-1"><a class="header-anchor" href="#how-risk-is-presented">How Risk Is Presented</a></h2>
 <p>The dashboard supports two VaR-style risk views.</p>
-
-<h3>Historical VaR proxy</h3>
-
+<h3 id="historical-var-proxy" tabindex="-1"><a class="header-anchor" href="#historical-var-proxy">Historical VaR proxy</a></h3>
 <p>This is the more intuitive option.</p>
-
 <p>It looks back through realized return history and asks:</p>
-
-<p>- what was the worst rolling loss over the selected history window?</p>
-
+<ul>
+<li>what was the worst rolling loss over the selected history window?</li>
+</ul>
 <p>This gives a stress-style view based on what actually happened in the past.</p>
-
-<h3>Parametric VaR</h3>
-
+<h3 id="parametric-var" tabindex="-1"><a class="header-anchor" href="#parametric-var">Parametric VaR</a></h3>
 <p>This is the smoother, model-based option.</p>
-
 <p>It uses annualized mean and annualized volatility with a normal approximation:</p>
-
-$$
+<p>$$
 \text{VaR} = \mu_{\text{annual}} + z_p \sigma_{\text{annual}}
-$$
-
+$$</p>
 <p>Here the left-tail probability is interpreted as a <code>1 / N years</code> event.</p>
-
 <hr>
-
-<h2>Where Live Data Fits In</h2>
-
+<h2 id="where-live-data-fits-in" tabindex="-1"><a class="header-anchor" href="#where-live-data-fits-in">Where Live Data Fits In</a></h2>
 <p>The optimization engine is still driven by return and covariance modeling, but the dashboard adds live context on top of that model.</p>
-
 <p>The live overlay layer includes:</p>
-
-<p>- Finnhub quote data for current price and previous close
-- FMP analyst target, rating, and analyst-count data</p>
-
+<ul>
+<li>Finnhub quote data for current price and previous close</li>
+<li>FMP analyst target, rating, and analyst-count data</li>
+</ul>
 <p>These fields do not replace the portfolio engine.</p>
-
 <hr>
-
-<h2>Implementation Limitations</h2>
-
+<h2 id="implementation-limitations" tabindex="-1"><a class="header-anchor" href="#implementation-limitations">Implementation Limitations</a></h2>
 <p>This is still a simplified analytical tool.</p>
-
 <p>It does <strong>not</strong> model:</p>
+<ul>
+<li>shorting</li>
+<li>leverage</li>
+<li>taxes</li>
+<li>transaction costs</li>
+<li>slippage</li>
+<li>liquidity constraints</li>
+<li>a full deterministic efficient-frontier solver</li>
+</ul>
 
-<p>- shorting
-- leverage
-- taxes
-- transaction costs
-- slippage
-- liquidity constraints
-- a full deterministic efficient-frontier solver</p>
-    </main>
-    
-    <footer>
-        <p>Portfolio Optimization Documentation | Generated on 2026-03-22 17:25</p>
-        <p>Built with Python, MathJax, and Highlight.js</p>
-    </footer>
+        <div class="footer">Source project: <code>/Users/A/portfolio-doco</code></div>
+      </article>
+    </section>
+  </main>
 </body>
 </html>

@@ -193,11 +193,11 @@ In the current implementation, the capped portfolio is chosen from efficient-fro
 
 ## Comparison Table
 
-| Method | What it optimizes | Accuracy | Efficiency in this app context | Repeatability | Main strength | Main limitation |
-|--------|--------------------|----------|-------------------------------|---------------|---------------|-----------------|
-| Monte Carlo | sampled stock subsets and sampled weights | lower | medium | medium with fixed seeds | simple and exploratory | weight search is noisy and wasteful |
-| Sampled subset + deterministic QP | sampled stock subsets, but deterministic weights inside each subset | medium to high | high | high | strong weight optimization with practical runtime | subset search is still heuristic |
-| Mixed-integer optimization | stock selection and weights jointly | highest | low | high | closest to a global optimum | much heavier computationally and operationally |
+| Method | Accuracy | Practical fit | Summary |
+|--------|----------|---------------|---------|
+| Monte Carlo | Lower | Medium | Explores stock subsets and weights by sampling; simple, but noisy and wasteful. |
+| Sampled subset + deterministic QP | Medium to high | High | Samples stock subsets, then solves weights deterministically inside each one; strong practical tradeoff. |
+| Mixed-integer optimization | Highest | Low | Solves stock selection and weights jointly; strongest mathematically, but much heavier computationally and operationally. |
 
 ## Why Mixed-Integer Optimization Is Not Implemented
 

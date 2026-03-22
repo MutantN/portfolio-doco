@@ -195,6 +195,9 @@ const styles = `
     width: 100%;
     border-collapse: collapse;
     margin: 18px 0;
+    table-layout: fixed;
+    display: block;
+    overflow-x: auto;
   }
 
   .content th,
@@ -203,6 +206,7 @@ const styles = `
     border: 1px solid var(--line);
     text-align: left;
     vertical-align: top;
+    overflow-wrap: anywhere;
   }
 
   .content th {

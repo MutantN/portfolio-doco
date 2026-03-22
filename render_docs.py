@@ -213,12 +213,16 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
             border-collapse: collapse;
             margin: 20px 0;
             font-size: 0.95em;
+            table-layout: fixed;
+            display: block;
+            overflow-x: auto;
         }}
         
         th, td {{
             padding: 12px 15px;
             text-align: left;
             border: 1px solid var(--border-color);
+            overflow-wrap: anywhere;
         }}
         
         th {{
